@@ -7,6 +7,7 @@ import { type ValidationResult } from '@/lib/sealData';
 
 interface DashboardProps {
   history: ValidationResult[];
+  onSelectResult?: (result: ValidationResult) => void;
 }
 
 function getStatusColorClass(status: 'pass' | 'fail' | 'warning'): string {
@@ -22,7 +23,7 @@ function getStatusColorClass(status: 'pass' | 'fail' | 'warning'): string {
   }
 }
 
-export function Dashboard({ history }: DashboardProps) {
+export function Dashboard({ history, onSelectResult }: DashboardProps) {
   const stats = useMemo(() => {
     if (history.length === 0) {
       return {
@@ -220,7 +221,11 @@ export function Dashboard({ history }: DashboardProps) {
         <h3 className="text-lg font-semibold mb-6">Recent Activity</h3>
         <div className="space-y-4">
           {stats.recentActivity.map((result) => (
-            <div key={result.id} className="flex items-center gap-4 p-4 rounded-lg bg-muted/30">
+            <div 
+              key={result.id} 
+              className="flex items-center gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+              onClick={() => onSelectResult?.(result)}
+            >
               <div className="shrink-0 w-16 h-16 rounded-lg bg-muted overflow-hidden">
                 <img
                   src={result.imageUrl}

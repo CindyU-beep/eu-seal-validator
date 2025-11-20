@@ -55,6 +55,7 @@ function App() {
   const handleSelectHistoryItem = (result: ValidationResult) => {
     setSelectedHistoryResult(result);
     setShowHistoryDetail(true);
+    setShowDashboard(false);
   };
 
   const handleBackFromHistory = () => {
@@ -73,6 +74,58 @@ function App() {
   }
 
   if (showDashboard) {
+    if (showHistoryDetail && selectedHistoryResult) {
+      return (
+        <div className="min-h-screen bg-background">
+          <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+            <div className="container mx-auto px-6 lg:px-12 py-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl bg-primary p-2.5">
+                    <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold tracking-tight">Henkel Validator</h1>
+                    <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setShowHistoryDetail(false);
+                      setSelectedHistoryResult(null);
+                    }}
+                    className="rounded-full gap-2"
+                  >
+                    <ChartBar size={18} weight="duotone" />
+                    Back to Dashboard
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowLanding(true)}
+                    className="rounded-full"
+                  >
+                    Home
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="container mx-auto px-6 lg:px-12 py-8">
+            <HistoryDetailView
+              result={selectedHistoryResult}
+              onBack={() => {
+                setShowHistoryDetail(false);
+                setSelectedHistoryResult(null);
+              }}
+            />
+          </main>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-background">
         <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -109,7 +162,10 @@ function App() {
         </header>
 
         <main className="container mx-auto px-6 lg:px-12 py-8">
-          <Dashboard history={validationHistory || []} />
+          <Dashboard 
+            history={validationHistory || []} 
+            onSelectResult={handleSelectHistoryItem}
+          />
         </main>
       </div>
     );
