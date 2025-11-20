@@ -47,6 +47,13 @@ An AI-powered automated system to validate product label images against EU (CLP/
 - **Progression**: Validation completes → Result stored with timestamp → Available in history view → User can review past validations
 - **Success criteria**: Historical validations persist between sessions, searchable/filterable by date or result
 
+### Analytics Dashboard
+- **Functionality**: Display comprehensive analytics and insights from validation history
+- **Purpose**: Provides high-level overview of compliance trends, patterns, and performance metrics
+- **Trigger**: User navigates to "Dashboard" tab
+- **Progression**: User clicks dashboard → Statistics calculated from history → Visual metrics displayed → User gains insights into validation patterns
+- **Success criteria**: Real-time analytics showing total validations, pass rates, average confidence, top detected seals, and recent activity with visual charts and progress indicators
+
 ## Edge Case Handling
 - **No seals detected**: Display clear message indicating no regulatory seals found, suggest image quality check
 - **Low confidence scores**: Flag results with confidence below 80% as "Needs Manual Review"

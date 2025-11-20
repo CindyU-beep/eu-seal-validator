@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKV } from '@github/spark/hooks';
-import { ShieldCheck, Books, ClockCounterClockwise } from '@phosphor-icons/react';
+import { ShieldCheck, Books, ClockCounterClockwise, ChartBar } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +10,7 @@ import { ValidationResults } from '@/components/ValidationResults';
 import { ReferenceSealGallery } from '@/components/ReferenceSealGallery';
 import { ValidationHistory } from '@/components/ValidationHistory';
 import { HistoryDetailView } from '@/components/HistoryDetailView';
+import { Dashboard } from '@/components/Dashboard';
 import { validateProductLabel } from '@/lib/validationService';
 import { type ValidationResult } from '@/lib/sealData';
 
@@ -97,10 +98,14 @@ function App() {
 
       <main className="container mx-auto px-6 lg:px-12 py-8">
         <Tabs defaultValue="validate" className="space-y-8">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 h-14 rounded-full bg-muted p-1.5">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 h-14 rounded-full bg-muted p-1.5">
             <TabsTrigger value="validate" className="gap-2 rounded-full data-[state=active]:shadow-sm">
               <ShieldCheck size={18} weight="duotone" />
               Validate
+            </TabsTrigger>
+            <TabsTrigger value="dashboard" className="gap-2 rounded-full data-[state=active]:shadow-sm">
+              <ChartBar size={18} weight="duotone" />
+              Dashboard
             </TabsTrigger>
             <TabsTrigger value="reference" className="gap-2 rounded-full data-[state=active]:shadow-sm">
               <Books size={18} weight="duotone" />
@@ -183,6 +188,10 @@ function App() {
                 )}
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="dashboard">
+            <Dashboard history={validationHistory || []} />
           </TabsContent>
 
           <TabsContent value="reference">
