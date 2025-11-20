@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { ChartBar, CheckCircle, WarningCircle, XCircle, TrendUp, Clock, ShieldCheck } from '@phosphor-icons/react';
-import { Badge } from '@/components/ui/badge
-import { type ValidationResult } from '@/lib/s
+import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { type ValidationResult } from '@/lib/sealData';
 
