@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useKV } from '@github/spark/hooks';
-import { ShieldCheck, Books, ClockCounterClockwise } from '@phosphor-icons/react';
+import { ShieldCheck, Books, ClockCounterClockwise, House } from '@phosphor-icons/react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+import { LandingPage } from '@/components/LandingPage';
 import { ImageUpload } from '@/components/ImageUpload';
 import { ValidationResults } from '@/components/ValidationResults';
 import { ReferenceSealGallery } from '@/components/ReferenceSealGallery';
@@ -14,6 +15,7 @@ import { validateProductLabel } from '@/lib/validationService';
 import { type ValidationResult } from '@/lib/sealData';
 
 function App() {
+  const [showLanding, setShowLanding] = useState(true);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [isValidating, setIsValidating] = useState(false);
@@ -81,22 +83,36 @@ function App() {
     toast.success('History cleared');
   };
 
+  if (showLanding) {
+    return <LandingPage onGetStarted={() => setShowLanding(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="container mx-auto px-8 py-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <ShieldCheck size={32} weight="duotone" className="text-primary" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <ShieldCheck size={32} weight="duotone" className="text-primary" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight">
+                  Henkel Regulatory Compliance Validator
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  AI-Powered EU CLP/GHS Seal Detection System
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">
-                Henkel Regulatory Compliance Validator
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                AI-Powered EU CLP/GHS Seal Detection System
-              </p>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowLanding(true)}
+            >
+              <House size={18} weight="duotone" />
+              Home
+            </Button>
           </div>
         </div>
       </header>
