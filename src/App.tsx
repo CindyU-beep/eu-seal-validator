@@ -72,10 +72,10 @@ function App() {
     }
   };
 
+  const [selectedHistoryResult, setSelectedHistoryResult] = useState<ValidationResult | null>(null);
+
   const handleSelectHistoryItem = (result: ValidationResult) => {
-    setCurrentResult(result);
-    setUploadedImage(result.imageUrl);
-    setActiveTab('validate');
+    setSelectedHistoryResult(result);
   };
 
   const handleClearHistory = () => {
@@ -214,12 +214,34 @@ function App() {
           </TabsContent>
 
           <TabsContent value="history">
-            <ValidationHistory
-              history={validationHistory || []}
-              onSelect={handleSelectHistoryItem}
-              onClear={handleClearHistory}
-              selectedId={currentResult?.id}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <ValidationHistory
+                history={validationHistory || []}
+                onSelect={handleSelectHistoryItem}
+                onClear={handleClearHistory}
+                selectedId={selectedHistoryResult?.id}
+              />
+              
+              <div>
+                {selectedHistoryResult ? (
+                  <ValidationResults result={selectedHistoryResult} />
+                ) : (
+                  <Card className="p-12 border-0 shadow-sm bg-muted/20">
+                    <div className="flex flex-col items-center justify-center gap-6 text-center">
+                      <div className="rounded-full bg-muted p-8">
+                        <ClockCounterClockwise size={56} className="text-muted-foreground/50" weight="duotone" />
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-semibold">Select a validation</h3>
+                        <p className="text-muted-foreground max-w-sm mx-auto">
+                          Click on a history item to view its detailed results
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                )}
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </main>

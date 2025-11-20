@@ -46,17 +46,11 @@ export function ValidationHistory({ history, onSelect, onClear, selectedId }: Va
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-semibold tracking-tight mb-2">Validation history</h2>
-          <p className="text-muted-foreground">
-            {history.length} validation{history.length !== 1 ? 's' : ''} performed
-          </p>
-        </div>
-        <Button variant="destructive" size="sm" onClick={onClear} className="rounded-full">
-          <Trash size={16} weight="bold" />
-          Clear history
-        </Button>
+      <div className="space-y-1">
+        <h2 className="text-2xl font-semibold tracking-tight">Validation history</h2>
+        <p className="text-muted-foreground text-sm">
+          {history.length} validation{history.length !== 1 ? 's' : ''} performed
+        </p>
       </div>
 
       <Card className="border-0 shadow-lg">
@@ -111,6 +105,13 @@ export function ValidationHistory({ history, onSelect, onClear, selectedId }: Va
             ))}
           </div>
         </ScrollArea>
+        
+        <div className="border-t p-4">
+          <Button variant="destructive" size="sm" onClick={onClear} className="rounded-full w-full">
+            <Trash size={16} weight="bold" />
+            Clear history
+          </Button>
+        </div>
       </Card>
     </div>
   );
