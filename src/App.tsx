@@ -55,7 +55,6 @@ function App() {
   const handleSelectHistoryItem = (result: ValidationResult) => {
     setSelectedHistoryResult(result);
     setShowHistoryDetail(true);
-    setShowDashboard(false);
   };
 
   const handleBackFromHistory = () => {
