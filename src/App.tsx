@@ -201,7 +201,6 @@ function App() {
                   history={validationHistory || []}
                   onSelect={handleSelectHistoryItem}
                   onClear={handleClearHistory}
-                  selectedId={selectedHistoryResult?.id}
                 />
               </div>
             )}

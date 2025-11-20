@@ -2,8 +2,6 @@ import { CheckCircle, WarningCircle, XCircle, ClockCounterClockwise, Trash } fro
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { type ValidationResult } from '@/lib/sealData';
 import { formatTimestamp, getStatusColor } from '@/lib/imageUtils';
 
@@ -11,10 +9,9 @@ interface ValidationHistoryProps {
   history: ValidationResult[];
   onSelect: (result: ValidationResult) => void;
   onClear: () => void;
-  selectedId?: string;
 }
 
-export function ValidationHistory({ history, onSelect, onClear, selectedId }: ValidationHistoryProps) {
+export function ValidationHistory({ history, onSelect, onClear }: ValidationHistoryProps) {
   if (history.length === 0) {
     return (
       <Card className="p-16 border-0 shadow-sm bg-muted/20">
@@ -46,73 +43,71 @@ export function ValidationHistory({ history, onSelect, onClear, selectedId }: Va
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-2xl font-semibold tracking-tight">Validation history</h2>
-        <p className="text-muted-foreground text-sm">
-          {history.length} validation{history.length !== 1 ? 's' : ''} performed
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold tracking-tight">Validation history</h2>
+          <p className="text-muted-foreground text-sm">
+            {history.length} validation{history.length !== 1 ? 's' : ''} performed
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={onClear} 
+          className="rounded-full gap-2 border-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+        >
+          <Trash size={16} weight="bold" />
+          Clear history
+        </Button>
       </div>
 
-      <Card className="border-0 shadow-lg">
-        <ScrollArea className="h-[600px]">
-          <div className="p-2">
-            {history.map((result, index) => (
-              <div key={result.id}>
-                <button
-                  onClick={() => onSelect(result)}
-                  className={`w-full text-left p-5 rounded-xl transition-all hover:bg-muted/80 ${
-                    selectedId === result.id ? 'bg-muted/80' : ''
-                  }`}
-                >
-                  <div className="flex items-start gap-5">
-                    <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-muted/50 border border-border/50">
-                      <img
-                        src={result.imageUrl}
-                        alt={result.fileName}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0 space-y-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="font-semibold truncate">{result.fileName}</p>
-                        {getStatusIcon(result.status)}
-                      </div>
-
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <Badge className={getStatusColor(result.status)} variant="secondary">
-                          {result.status.toUpperCase()}
-                        </Badge>
-                        <span className="text-sm font-mono text-muted-foreground">
-                          {result.overallConfidence}% confidence
-                        </span>
-                      </div>
-
-                      <p className="text-sm text-muted-foreground">
-                        {formatTimestamp(result.timestamp)}
-                      </p>
-
-                      {result.detectedSeals.length > 0 && (
-                        <p className="text-sm text-muted-foreground">
-                          {result.detectedSeals.length} seal{result.detectedSeals.length !== 1 ? 's' : ''} detected
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </button>
-                {index < history.length - 1 && <Separator className="my-1" />}
+      <div className="space-y-3">
+        {history.map((result) => (
+          <Card 
+            key={result.id}
+            className="border-0 shadow-sm hover:shadow-md transition-all overflow-hidden cursor-pointer"
+            onClick={() => onSelect(result)}
+          >
+            <div className="flex items-center gap-4 p-4">
+              <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-muted/30 border">
+                <img
+                  src={result.imageUrl}
+                  alt={result.fileName}
+                  className="w-full h-full object-cover"
+                />
               </div>
-            ))}
-          </div>
-        </ScrollArea>
-        
-        <div className="border-t p-4">
-          <Button variant="destructive" size="sm" onClick={onClear} className="rounded-full w-full">
-            <Trash size={16} weight="bold" />
-            Clear history
-          </Button>
-        </div>
-      </Card>
+
+              <div className="flex-1 min-w-0 space-y-2">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-semibold truncate text-base">{result.fileName}</p>
+                  {getStatusIcon(result.status)}
+                </div>
+
+                <div className="flex items-center gap-3 flex-wrap">
+                  <Badge className={getStatusColor(result.status)} variant="secondary">
+                    {result.status.toUpperCase()}
+                  </Badge>
+                  <span className="text-sm font-mono text-muted-foreground">
+                    {result.overallConfidence}% confidence
+                  </span>
+                  {result.detectedSeals.length > 0 && (
+                    <>
+                      <span className="text-muted-foreground">•</span>
+                      <span className="text-sm text-muted-foreground">
+                        {result.detectedSeals.length} seal{result.detectedSeals.length !== 1 ? 's' : ''}
+                      </span>
+                    </>
+                  )}
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                  {formatTimestamp(result.timestamp)}
+                </p>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
