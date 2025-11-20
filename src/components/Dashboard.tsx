@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
-import { ShieldCheck, WarningCircle, CheckCircle, XCircle, TrendUp } from '@phosphor-icons/react';
-import { type ValidationResult } from '@/lib/sealData';
-
+import { type ValidationResult } from '@/lib
 interface DashboardProps {
+}
+
+    if (history.length ===
   history: ValidationResult[];
 }
 
@@ -14,73 +14,73 @@ export function Dashboard({ history }: DashboardProps) {
     if (history.length === 0) {
       return {
         totalValidations: 0,
-        passCount: 0,
-        warningCount: 0,
-        failCount: 0,
-        passRate: 0,
-        averageConfidence: 0,
-        topDetectedSeals: [],
-        totalSealsDetected: 0,
-        uniqueProducts: 0,
-        recentActivity: []
+        uniqueProduct
       };
-    }
 
-    const passCount = history.filter(r => r.status === 'pass').length;
-    const warningCount = history.filter(r => r.status === 'warning').length;
-    const failCount = history.filter(r => r.status === 'fail').length;
-    const totalConfidence = history.reduce((sum, r) => sum + r.overallConfidence, 0);
-    const sealCounts = new Map<string, number>();
+    const warningCou
+    const totalConfidence = h
     
-    history.forEach(result => {
-      result.detectedSeals.forEach(seal => {
-        sealCounts.set(seal.sealName, (sealCounts.get(seal.sealName) || 0) + 1);
+      result.detectedSeals.for
       });
-    });
 
-    const topSeals = Array.from(sealCounts.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
+      .m
+     
 
-    const uniqueProducts = new Set(history.map(r => r.fileName)).size;
-    const totalSealsDetected = history.reduce((sum, r) => sum + r.detectedSeals.length, 0);
 
-    return {
       totalValidations: history.length,
-      passCount,
       warningCount,
-      failCount,
       passRate: Math.round((passCount / history.length) * 100),
-      averageConfidence: Math.round(totalConfidence / history.length),
       topDetectedSeals: topSeals,
-      totalSealsDetected,
-      uniqueProducts,
-      recentActivity: history.slice(0, 5)
+    
     };
-  }, [history]);
 
-  if (history.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold tracking-tight mb-2">Dashboard</h2>
-          <p className="text-muted-foreground">
-            Overview of your validation activity and performance metrics
-          </p>
-        </div>
+        <
+       
 
-        <Card className="p-12 border-0 shadow-sm bg-muted/20">
-          <div className="flex flex-col items-center justify-center gap-6 text-center">
-            <div className="rounded-full bg-muted p-8">
-              <ShieldCheck size={56} className="text-muted-foreground/50" weight="duotone" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold">No validations yet</h3>
-              <p className="text-muted-foreground max-w-sm mx-auto">
-                Start validating product labels to see your analytics and insights here
+
+          <div className="flex flex-col items-ce
+              <ShieldCheck size={56} cla
+            <div cl
+
               </p>
+          </div>
+
+  }
+  return (
+      <div class
+        <p classNam
+        </p>
+
+        <Card className="p-6 border-0 shadow-lg">
+            <div className="space
+              <p classNam
+            <div clas
             </div>
+      
+            <spa
+
+        <Card className="p-6 
+            
+              <p className="text-3xl font
+            <div className="ro
+            </div>
+          <Progress value={stats.passRate} clas
+
+          <div
+              
+
+              <WarningCircle size={28} weight="duotone" classN
+          </div>
+        </Card>
+        <Card className="p-6 border-0 shadow-lg">
+            <div c
+              <p className="text-3xl fo
+            <div className="rounded-full bg-secondary p-3">
+            </div>
+        </Card>
+
+        <Card clas
           </div>
         </Card>
       </div>
@@ -251,13 +251,13 @@ export function Dashboard({ history }: DashboardProps) {
   );
 }
 
-function getStatusColorClass(status: ValidationResult['status']): string {
-  switch (status) {
-    case 'pass':
-      return 'bg-accent/10 text-accent hover:bg-accent/20 border-accent/20';
-    case 'warning':
-      return 'bg-warning/10 text-warning hover:bg-warning/20 border-warning/20';
-    case 'fail':
-      return 'bg-destructive/10 text-destructive hover:bg-destructive/20 border-destructive/20';
-  }
-}
+
+
+
+
+
+
+
+
+
+
