@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import { ShieldCheck, CheckCircle, WarningCircle, XCircle, TrendUp } from '@phosphor-icons/react';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { type ValidationResult } from '@/lib/sealData';
+import { Progress } from '@/components/ui/prog
 
-interface DashboardProps {
+  history: ValidationResult[];
+
+
+      return 'bg-accent te
   history: ValidationResult[];
 }
 
@@ -19,7 +19,7 @@ function getStatusColorClass(status: 'pass' | 'fail' | 'warning'): string {
       return 'bg-warning text-warning-foreground';
     default:
       return 'bg-muted text-muted-foreground';
-  }
+   
 }
 
 export function Dashboard({ history }: DashboardProps) {
@@ -89,182 +89,170 @@ export function Dashboard({ history }: DashboardProps) {
           <div className="flex flex-col items-center justify-center gap-6 text-center">
             <div className="rounded-full bg-muted p-8">
               <ShieldCheck size={56} className="text-muted-foreground/50" weight="duotone" />
-            </div>
+      <div classNa
             <div className="space-y-2">
               <h3 className="text-xl font-semibold">No validation data yet</h3>
               <p className="text-muted-foreground max-w-sm mx-auto">
                 Start validating product labels to see your dashboard metrics
               </p>
-            </div>
           </div>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-6xl mx-auto space-y-8">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold tracking-tight mb-2">Dashboard</h2>
-        <p className="text-muted-foreground">
-          Overview of your validation activity and performance metrics
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="p-6 border-0 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground font-medium">Total validations</p>
-              <p className="text-3xl font-bold tracking-tight">{stats.totalValidations}</p>
-            </div>
-            <div className="rounded-full bg-primary/10 p-3">
-              <ShieldCheck size={28} weight="duotone" className="text-primary" />
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <TrendUp size={16} weight="bold" className="text-accent" />
-            <span>{stats.totalSealsDetected} total seals detected</span>
-          </div>
-        </Card>
-
-        <Card className="p-6 border-0 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground font-medium">Pass rate</p>
-              <p className="text-3xl font-bold tracking-tight">{stats.passRate}%</p>
-            </div>
-            <div className="rounded-full bg-accent/10 p-3">
-              <CheckCircle size={28} weight="duotone" className="text-accent" />
-            </div>
-          </div>
-          <Progress value={stats.passRate} className="h-2" />
-        </Card>
-
-        <Card className="p-6 border-0 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground font-medium">Avg. confidence</p>
-              <p className="text-3xl font-bold tracking-tight">{stats.averageConfidence}%</p>
-            </div>
-            <div className="rounded-full bg-warning/10 p-3">
-              <WarningCircle size={28} weight="duotone" className="text-warning" />
-            </div>
-          </div>
-          <Progress value={stats.averageConfidence} className="h-2" />
-        </Card>
-
-        <Card className="p-6 border-0 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground font-medium">Unique products</p>
-              <p className="text-3xl font-bold tracking-tight">{stats.uniqueProducts}</p>
-            </div>
-            <div className="rounded-full bg-secondary p-3">
-              <ShieldCheck size={28} weight="duotone" className="text-secondary-foreground" />
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6 border-0 shadow-lg">
-          <h3 className="text-lg font-semibold mb-6 tracking-tight">Validation breakdown</h3>
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <CheckCircle size={20} weight="fill" className="text-accent" />
-                  <span className="font-medium">Passed</span>
-                </div>
-                <span className="text-sm text-muted-foreground">{stats.passCount} validations</span>
-              </div>
-              <Progress value={(stats.passCount / stats.totalValidations) * 100} className="h-2" />
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <WarningCircle size={20} weight="fill" className="text-warning" />
-                  <span className="font-medium">Warning</span>
-                </div>
-                <span className="text-sm text-muted-foreground">{stats.warningCount} validations</span>
-              </div>
-              <Progress value={(stats.warningCount / stats.totalValidations) * 100} className="h-2 [&>div]:bg-warning" />
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <XCircle size={20} weight="fill" className="text-destructive" />
-                  <span className="font-medium">Failed</span>
-                </div>
-                <span className="text-sm text-muted-foreground">{stats.failCount} validations</span>
-              </div>
-              <Progress value={(stats.failCount / stats.totalValidations) * 100} className="h-2 [&>div]:bg-destructive" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-6 border-0 shadow-lg">
-          <h3 className="text-lg font-semibold mb-6 tracking-tight">Top detected seals</h3>
-          {stats.topDetectedSeals.length > 0 ? (
-            <div className="space-y-4">
-              {stats.topDetectedSeals.map((seal, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-sm">{seal.name}</span>
-                    <Badge variant="secondary" className="ml-2">{seal.count}</Badge>
-                  </div>
-                  <Progress 
-                    value={(seal.count / stats.totalValidations) * 100} 
-                    className="h-2"
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-muted-foreground text-sm">No seals detected yet</p>
-          )}
-        </Card>
-      </div>
-
-      <Card className="p-6 border-0 shadow-lg">
-        <h3 className="text-lg font-semibold mb-6 tracking-tight">Recent activity</h3>
-        <div className="space-y-4">
-          {stats.recentActivity.map((result) => {
-            const statusColor = result.status === 'pass' ? 'text-accent' : result.status === 'warning' ? 'text-warning' : 'text-destructive';
-            const StatusIcon = result.status === 'pass' ? CheckCircle : result.status === 'warning' ? WarningCircle : XCircle;
+            </di
+              <
             
-            return (
-              <div key={result.id} className="flex items-center gap-4 p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
-                  <img
-                    src={result.imageUrl}
-                    alt={result.fileName}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{result.fileName}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {result.detectedSeals.length} seals detected • {result.overallConfidence}% confidence
-                  </p>
-                </div>
+      
+   
+
+          
+              <p className="text-sm text-muted-fo
+            </div>
+              <ShieldCheck size={28} weight="duotone" className="text-seconda
+          </div>
+      </div>
+      <div c
+          <h
+
                 <div className="flex items-center gap-2">
-                  <StatusIcon size={24} weight="fill" className={statusColor} />
-                  <Badge className={getStatusColorClass(result.status)}>
-                    {result.status.toUpperCase()}
-                  </Badge>
+                  <span className="font-medium">P
+                <span className="text-sm text-muted-foreground">{s
+              <Progress value={(stats.p
+
+              <div className="flex items-center justify-between">
+                  
                 </div>
               </div>
-            );
+            </div>
+            <div
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Failed</span>
+                <span className="text-sm text-muted-foreground">{stats.f
+              <P
+          </div
+
+          <h3 className="text-lg font-semibold mb
+            <div className="space-y-4">
+                <div key={index} classN
+                    <span className="font-medium text-sm">{seal.name}</span>
+                  </div>
+                  
+                  />
+              ))}
+          ) : (
+          )}
+      </div>
+      <Card cla
+
+            const statusColor = result.status ===
+            
+              <div key={result.id} clas
+                  <img
+                    alt={result.fileName}
+                  
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-muted-foreground">
+                  
+                
+                  <Badge className={getStatusColorClass(result.status)
+               
+
           })}
-        </div>
       </Card>
-    </div>
   );
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
