@@ -17,18 +17,20 @@ Here are the 15 reference EU regulatory seals to check for:
 ${sealsList}
 
 Your task:
-1. Carefully examine the image for any GHS pictograms (diamond-shaped hazard symbols with red borders)
-2. Identify each pictogram present in the image
-3. For each identified pictogram, provide a confidence score (0-100)
-4. For each identified pictogram, provide normalized bounding box coordinates (x, y, width, height as decimals 0-1)
-5. List any pictograms that appear to be missing or unclear
-6. Provide an overall assessment of the label's compliance quality
+1. First, describe what product you observe in the image (e.g., "This appears to be a laundry detergent bottle...", "This is a cleaning spray container...", etc.)
+2. Carefully examine the image for any GHS pictograms (diamond-shaped hazard symbols with red borders)
+3. Identify each pictogram present in the image
+4. For each identified pictogram, provide a confidence score (0-100)
+5. For each identified pictogram, provide normalized bounding box coordinates (x, y, width, height as decimals 0-1)
+6. List any pictograms that appear to be missing or unclear
+7. Provide an overall assessment of the label's compliance quality
 
 IMAGE TO ANALYZE:
 ${imageBase64}
 
 Return your analysis as a JSON object with this exact structure:
 {
+  "productDescription": "This appears to be a [product type] with [notable visual characteristics]. The label shows [brand/text/imagery observations].",
   "detectedSeals": [
     {
       "sealId": "ghs01",
@@ -49,6 +51,7 @@ Return your analysis as a JSON object with this exact structure:
 }
 
 Note: 
+- productDescription should be a clear, concise description of what the product appears to be based on visual observation
 - complianceStatus should be "pass" if all detected seals are clear and confidence is high (>80%), "warning" if confidence is moderate (60-80%) or image quality is poor, "fail" if critical issues are found
 - Only include seals that you actually detect in the image
 - Be thorough but conservative in your assessments
@@ -107,6 +110,7 @@ Note:
       missingSeals,
       overallConfidence: analysis.overallConfidence || 0,
       aiAnalysis: analysis.summary || 'No detailed analysis available.',
+      productDescription: analysis.productDescription || 'Product description not available.',
       annotatedImageUrl
     };
 

@@ -133,6 +133,11 @@ export function ValidationResults({ result }: ValidationResultsProps) {
       </Card>
 
       <Card className="p-8 border-0 shadow-lg">
+        <h4 className="text-lg font-semibold mb-4 tracking-tight">Product observation</h4>
+        <p className="text-muted-foreground leading-relaxed">{result.productDescription}</p>
+      </Card>
+
+      <Card className="p-8 border-0 shadow-lg">
         <h4 className="text-lg font-semibold mb-4 tracking-tight">AI analysis</h4>
         <p className="text-muted-foreground leading-relaxed">{result.aiAnalysis}</p>
       </Card>

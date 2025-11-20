@@ -16,6 +16,7 @@ export interface ValidationResult {
   missingSeals: string[];
   overallConfidence: number;
   aiAnalysis: string;
+  productDescription: string;
   annotatedImageUrl?: string;
 }
 
