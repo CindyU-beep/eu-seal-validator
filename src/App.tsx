@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { ShieldCheck, Books, ClockCounterClo
+import { useKV } from '@github/spark/hooks';
+import { ShieldCheck, Books, ClockCounterClockwise } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { LandingPage } from '@/components/Landin
-import { ValidationResults } from '@/compone
-import { ValidationHistory } from '@/components/Vali
-import { validateProductLabel }
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LandingPage } from '@/components/LandingPage';
 import { ImageUpload } from '@/components/ImageUpload';
 import { ValidationResults } from '@/components/ValidationResults';
@@ -16,124 +14,93 @@ import { validateProductLabel } from '@/lib/validationService';
 import { type ValidationResult } from '@/lib/sealData';
 
 function App() {
-    setUploadedImage(imageBase64);
+  const [showLanding, setShowLanding] = useState(true);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [currentResult, setCurrentResult] = useState<ValidationResult | null>(null);
   const [validationHistory, setValidationHistory] = useKV<ValidationResult[]>('validation-history', []);
-  };
+  const [showHistoryDetail, setShowHistoryDetail] = useState(false);
+  const [selectedHistoryResult, setSelectedHistoryResult] = useState<ValidationResult | null>(null);
 
-    if (!uploadedImage || !currentFile) {
+  const handleImageSelect = (imageBase64: string, file: File) => {
     setUploadedImage(imageBase64);
-    }
+    setCurrentFile(file);
     setCurrentResult(null);
-    
+  };
 
   const handleClearImage = () => {
     setUploadedImage(null);
-        description: erro
+    setCurrentFile(null);
+    setCurrentResult(null);
+  };
+
+  const handleValidate = async () => {
+    if (!uploadedImage || !currentFile) return;
+
+    setIsValidating(true);
+    try {
+      const result = await validateProductLabel(uploadedImage, currentFile.name);
+      setCurrentResult(result);
+      setValidationHistory((currentHistory) => [result, ...(currentHistory || [])]);
+    } catch (error) {
+      console.error('Validation error:', error);
     } finally {
-    
+      setIsValidating(false);
+    }
+  };
 
-  const [showHistoryDetail, setShowHis
-  const handleSelectHistoryItem = (result
+  const handleSelectHistoryItem = (result: ValidationResult) => {
+    setSelectedHistoryResult(result);
     setShowHistoryDetail(true);
+  };
 
-    s
+  const handleBackFromHistory = () => {
+    setShowHistoryDetail(false);
+    setSelectedHistoryResult(null);
+  };
 
-  const handleClearHistory
-    setShowHistoryDetail(fa
+  const handleClearHistory = () => {
+    setValidationHistory([]);
+    setShowHistoryDetail(false);
+    setSelectedHistoryResult(null);
+  };
 
-
+  if (showLanding) {
     return <LandingPage onGetStarted={() => setShowLanding(false)} />;
+  }
 
-    <d
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 lg:px-12 py-5">
-
-                <ShieldCheck size={24
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-primary p-2.5">
+                <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+              </div>
               <div>
-                  Henkel Validator
-           
-                </p>
+                <h1 className="text-xl font-bold tracking-tight">Henkel Validator</h1>
+                <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+              </div>
             </div>
+            <Button
               variant="ghost"
-           
+              onClick={() => setShowLanding(true)}
+              className="rounded-full"
             >
               Home
+            </Button>
           </div>
-      </hea
-      <
-          <TabsList c
-              <ShieldCheck size={18} we
-            </TabsTrigger>
-         
-            </T
-              <ClockCounterCl
-     
+        </div>
+      </header>
 
-
-                <div>
-                  <p className="text-muted-foreground mb-6">Upload y
-
-                    onClear={handleClearImage}
-                  />
-
-    
-
-                    className="w-full r
-                    {isValidatin
-                        <Progress c
-    
-
-                        Validate lab
-                    )}
-                )}
-
-                {isValidating && (
-    
-
-                    
-                        </p>
-   
-
-          
-                )}
-                {!uploadedImage && !isValidating && (
-                    <div className="flex flex-col items-center
-                        <ShieldCheck size={56} className="tex
-                      <div className="space-y-2">
-                        <p className="text-muted-foregrou
-                        </p>
-                    
-                )}
-            </div>
-
-            <Referenc
-
-            {showHistoryDetail && selec
-                resu
-              />
-              <div
-                  h
-                  onClear={ha
-                />
-            )}
-        </Tabs>
-    </div>
-}
-export default App
-
-
-
-
-
-
-
-
-
-
-
+      <main className="container mx-auto px-6 lg:px-12 py-8">
+        <Tabs defaultValue="validate" className="space-y-8">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 h-14 rounded-full bg-muted p-1.5">
+            <TabsTrigger value="validate" className="gap-2 rounded-full data-[state=active]:shadow-sm">
+              <ShieldCheck size={18} weight="duotone" />
+              Validate
             </TabsTrigger>
             <TabsTrigger value="reference" className="gap-2 rounded-full data-[state=active]:shadow-sm">
               <Books size={18} weight="duotone" />
@@ -168,7 +135,6 @@ export default App
                   >
                     {isValidating ? (
                       <>
-                        <Progress className="w-full h-2" />
                         Validating...
                       </>
                     ) : (
