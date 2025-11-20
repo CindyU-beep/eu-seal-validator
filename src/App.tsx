@@ -89,26 +89,27 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-8 py-6">
+      <header className="border-b bg-card sticky top-0 z-50 backdrop-blur-md bg-card/80">
+        <div className="container mx-auto px-6 lg:px-12 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <ShieldCheck size={32} weight="duotone" className="text-primary" />
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 bg-primary rounded-xl">
+                <ShieldCheck size={24} weight="fill" className="text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight">
-                  Henkel Regulatory Compliance Validator
+                <h1 className="text-lg font-semibold tracking-tight">
+                  Henkel Validator
                 </h1>
-                <p className="text-sm text-muted-foreground">
-                  AI-Powered EU CLP/GHS Seal Detection System
+                <p className="text-xs text-muted-foreground hidden sm:block">
+                  AI-Powered Compliance
                 </p>
               </div>
             </div>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={() => setShowLanding(true)}
+              className="rounded-full font-medium"
             >
               <House size={18} weight="duotone" />
               Home
@@ -117,42 +118,43 @@ function App() {
         </div>
       </header>
 
-      <main className="container mx-auto px-8 py-6">
+      <main className="container mx-auto px-6 lg:px-12 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
-            <TabsTrigger value="validate" className="gap-2">
+          <TabsList className="grid w-full max-w-md grid-cols-3 mb-8 h-12 bg-muted/50 p-1 rounded-full">
+            <TabsTrigger value="validate" className="gap-2 rounded-full data-[state=active]:shadow-sm">
               <ShieldCheck size={18} weight="duotone" />
               Validate
             </TabsTrigger>
-            <TabsTrigger value="reference" className="gap-2">
+            <TabsTrigger value="reference" className="gap-2 rounded-full data-[state=active]:shadow-sm">
               <Books size={18} weight="duotone" />
               Reference
             </TabsTrigger>
-            <TabsTrigger value="history" className="gap-2">
+            <TabsTrigger value="history" className="gap-2 rounded-full data-[state=active]:shadow-sm">
               <ClockCounterClockwise size={18} weight="duotone" />
               History
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="validate" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <TabsContent value="validate" className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <Card className="p-6">
-                  <h2 className="text-xl font-semibold mb-4">Upload Product Label</h2>
+                <div>
+                  <h2 className="text-2xl font-semibold mb-2 tracking-tight">Upload label</h2>
+                  <p className="text-muted-foreground mb-6">Upload your product label to begin validation</p>
                   <ImageUpload
                     onImageSelect={handleImageSelect}
                     currentImage={uploadedImage || undefined}
                     onClear={handleClearImage}
                     disabled={isValidating}
                   />
-                </Card>
+                </div>
 
                 {uploadedImage && !currentResult && (
                   <Button
                     onClick={handleValidate}
                     disabled={isValidating}
                     size="lg"
-                    className="w-full"
+                    className="w-full rounded-full h-14 text-base font-medium shadow-lg hover:shadow-xl transition-shadow"
                   >
                     {isValidating ? (
                       <>
@@ -162,7 +164,7 @@ function App() {
                     ) : (
                       <>
                         <ShieldCheck size={20} weight="bold" />
-                        Validate Label
+                        Validate label
                       </>
                     )}
                   </Button>
@@ -171,12 +173,12 @@ function App() {
 
               <div>
                 {isValidating && (
-                  <Card className="p-12">
-                    <div className="flex flex-col items-center justify-center gap-4 text-center">
+                  <Card className="p-12 border-0 shadow-lg">
+                    <div className="flex flex-col items-center justify-center gap-6 text-center">
                       <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent" />
                       <div className="space-y-2">
-                        <h3 className="text-lg font-semibold">Analyzing Label...</h3>
-                        <p className="text-sm text-muted-foreground">
+                        <h3 className="text-xl font-semibold">Analyzing label...</h3>
+                        <p className="text-muted-foreground">
                           AI is comparing your label against EU regulatory seals
                         </p>
                       </div>
@@ -189,14 +191,14 @@ function App() {
                 )}
 
                 {!uploadedImage && !isValidating && (
-                  <Card className="p-12">
-                    <div className="flex flex-col items-center justify-center gap-4 text-center">
-                      <div className="rounded-full bg-muted p-6">
-                        <ShieldCheck size={48} className="text-muted-foreground" weight="duotone" />
+                  <Card className="p-12 border-0 shadow-sm bg-muted/20">
+                    <div className="flex flex-col items-center justify-center gap-6 text-center">
+                      <div className="rounded-full bg-muted p-8">
+                        <ShieldCheck size={56} className="text-muted-foreground/50" weight="duotone" />
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-lg font-semibold">Ready to Validate</h3>
-                        <p className="text-sm text-muted-foreground">
+                        <h3 className="text-xl font-semibold">Ready to validate</h3>
+                        <p className="text-muted-foreground max-w-sm mx-auto">
                           Upload a product label to begin compliance validation
                         </p>
                       </div>

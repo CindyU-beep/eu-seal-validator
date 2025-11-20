@@ -1,4 +1,4 @@
-import { ShieldCheck, Lightning, CheckCircle, ArrowRight, Books, Sparkle } from '@phosphor-icons/react';
+import { ShieldCheck, Lightning, CheckCircle, ArrowRight, Books, Sparkle, Seal } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -8,92 +8,88 @@ interface LandingPageProps {
 
 export function LandingPage({ onGetStarted }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-8 py-4">
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card sticky top-0 z-50 backdrop-blur-md bg-card/80">
+        <div className="container mx-auto px-6 lg:px-12 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <ShieldCheck size={28} weight="duotone" className="text-primary" />
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 bg-primary rounded-xl">
+                <ShieldCheck size={24} weight="fill" className="text-primary-foreground" />
               </div>
-              <div>
-                <h1 className="text-xl font-bold tracking-tight">
-                  Henkel Compliance Validator
-                </h1>
-              </div>
+              <span className="text-lg font-semibold tracking-tight">
+                Henkel Validator
+              </span>
             </div>
-            <Button onClick={onGetStarted} size="sm">
-              Launch App
-              <ArrowRight size={16} weight="bold" />
+            <Button onClick={onGetStarted} size="sm" className="rounded-full px-5 font-medium">
+              Get started
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-8">
-        <section className="py-20 text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-6">
+      <main className="container mx-auto px-6 lg:px-12">
+        <section className="py-16 lg:py-24 text-center max-w-5xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 text-primary rounded-full text-sm font-medium mb-8 border border-primary/10">
             <Sparkle size={16} weight="fill" />
-            AI-Powered Regulatory Compliance
+            AI-Powered Compliance
           </div>
           
-          <h2 className="text-5xl font-bold tracking-tight mb-6 bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
-            Automated EU CLP/GHS Seal Validation
-          </h2>
+          <h1 className="text-5xl lg:text-7xl font-semibold tracking-tight mb-6 leading-tight">
+            Validate product labels<br />in seconds
+          </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
-            Validate product label compliance in seconds with GPT-4o vision AI. 
-            Ensure your labels meet EU regulatory standards with confidence.
+          <p className="text-xl lg:text-2xl text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto font-light">
+            Automated EU CLP/GHS seal validation powered by GPT-4o vision AI. 
+            Ensure regulatory compliance with confidence.
           </p>
 
-          <div className="flex items-center justify-center gap-4">
-            <Button onClick={onGetStarted} size="lg" className="text-base">
-              Get Started
-              <ArrowRight size={20} weight="bold" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button onClick={onGetStarted} size="lg" className="text-base rounded-full px-8 h-14 font-medium shadow-lg hover:shadow-xl transition-shadow">
+              Get started
             </Button>
             <Button 
               variant="outline" 
               size="lg" 
-              className="text-base"
+              className="text-base rounded-full px-8 h-14 font-medium"
               onClick={() => {
                 document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              Learn More
+              Learn more
             </Button>
           </div>
         </section>
 
-        <section className="pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <Card className="p-6 border-2 hover:border-primary/20 transition-colors">
-              <div className="p-3 bg-accent/10 rounded-lg w-fit mb-4">
-                <Lightning size={32} weight="duotone" className="text-accent" />
+        <section className="pb-20 lg:pb-32">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <Card className="p-8 hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-card">
+              <div className="p-3 bg-accent/10 rounded-2xl w-fit mb-6">
+                <Lightning size={28} weight="duotone" className="text-accent" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Instant Validation</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <h3 className="text-xl font-semibold mb-3">Instant validation</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Upload your product label and receive compliance results in seconds. 
                 No manual inspection required.
               </p>
             </Card>
 
-            <Card className="p-6 border-2 hover:border-primary/20 transition-colors">
-              <div className="p-3 bg-primary/10 rounded-lg w-fit mb-4">
-                <ShieldCheck size={32} weight="duotone" className="text-primary" />
+            <Card className="p-8 hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-card">
+              <div className="p-3 bg-primary/10 rounded-2xl w-fit mb-6">
+                <Seal size={28} weight="duotone" className="text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">EU Compliant</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <h3 className="text-xl font-semibold mb-3">EU compliant</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Validates against 15 official EU CLP/GHS regulatory seals. 
                 Stay compliant with current standards.
               </p>
             </Card>
 
-            <Card className="p-6 border-2 hover:border-primary/20 transition-colors">
-              <div className="p-3 bg-accent/10 rounded-lg w-fit mb-4">
-                <CheckCircle size={32} weight="duotone" className="text-accent" />
+            <Card className="p-8 hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-card">
+              <div className="p-3 bg-accent/10 rounded-2xl w-fit mb-6">
+                <CheckCircle size={28} weight="duotone" className="text-accent" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">AI-Powered Accuracy</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <h3 className="text-xl font-semibold mb-3">AI-powered accuracy</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Leverages GPT-4o vision model for precise seal detection and 
                 confidence scoring.
               </p>
@@ -101,71 +97,71 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="features" className="py-20 bg-card/30 -mx-8 px-8">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold mb-4">How It Works</h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+        <section id="features" className="py-20 lg:py-32 -mx-6 lg:-mx-12 px-6 lg:px-12 bg-muted/30">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-semibold mb-6 tracking-tight">How it works</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-light">
                 Our streamlined process ensures fast, accurate compliance validation
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="space-y-8">
+                <div className="flex gap-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-lg">
                     1
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Upload Product Label</h4>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="pt-1">
+                    <h4 className="font-semibold text-lg mb-2">Upload product label</h4>
+                    <p className="text-muted-foreground leading-relaxed">
                       Drag and drop or select your product label image for analysis
                     </p>
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+                <div className="flex gap-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-lg">
                     2
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">AI Analysis</h4>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="pt-1">
+                    <h4 className="font-semibold text-lg mb-2">AI analysis</h4>
+                    <p className="text-muted-foreground leading-relaxed">
                       GPT-4o compares your label against 15 EU regulatory seals
                     </p>
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+                <div className="flex gap-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-lg">
                     3
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Receive Results</h4>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="pt-1">
+                    <h4 className="font-semibold text-lg mb-2">Review results</h4>
+                    <p className="text-muted-foreground leading-relaxed">
                       Get detailed compliance report with seal detection and confidence scores
                     </p>
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
+                <div className="flex gap-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-lg">
                     4
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Track History</h4>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="pt-1">
+                    <h4 className="font-semibold text-lg mb-2">Track history</h4>
+                    <p className="text-muted-foreground leading-relaxed">
                       Access previous validations for auditing and compliance tracking
                     </p>
                   </div>
                 </div>
               </div>
 
-              <Card className="p-8">
-                <div className="aspect-video rounded-lg bg-gradient-to-br from-primary/10 via-accent/5 to-background flex items-center justify-center">
-                  <div className="text-center space-y-4">
-                    <ShieldCheck size={80} weight="duotone" className="text-primary mx-auto" />
-                    <p className="text-sm text-muted-foreground">Validation Interface Preview</p>
+              <Card className="p-0 overflow-hidden shadow-lg border-0">
+                <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center">
+                  <div className="text-center space-y-6">
+                    <ShieldCheck size={80} weight="duotone" className="text-primary mx-auto opacity-40" />
+                    <p className="text-sm text-muted-foreground font-medium">Validation interface</p>
                   </div>
                 </div>
               </Card>
@@ -173,31 +169,32 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
         </section>
 
-        <section className="py-20">
-          <div className="max-w-3xl mx-auto">
-            <Card className="p-12 text-center bg-gradient-to-br from-primary/5 to-accent/5 border-2">
-              <Books size={48} weight="duotone" className="text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-3">Ready to Validate?</h3>
-              <p className="text-muted-foreground mb-6">
+        <section className="py-20 lg:py-32">
+          <div className="max-w-4xl mx-auto">
+            <Card className="p-12 lg:p-16 text-center bg-gradient-to-br from-primary/5 to-accent/5 border-0 shadow-lg">
+              <ShieldCheck size={56} weight="duotone" className="text-primary mx-auto mb-6" />
+              <h3 className="text-3xl lg:text-4xl font-semibold mb-4 tracking-tight">Ready to validate?</h3>
+              <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto font-light">
                 Start validating your product labels against EU regulatory standards today
               </p>
-              <Button onClick={onGetStarted} size="lg" className="text-base">
-                Launch Validator
-                <ArrowRight size={20} weight="bold" />
+              <Button onClick={onGetStarted} size="lg" className="text-base rounded-full px-8 h-14 font-medium shadow-lg hover:shadow-xl transition-shadow">
+                Get started
               </Button>
             </Card>
           </div>
         </section>
       </main>
 
-      <footer className="border-t bg-card/30 py-8">
-        <div className="container mx-auto px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={20} weight="duotone" className="text-primary" />
-              <span>Henkel Regulatory Compliance Validator</span>
+      <footer className="border-t bg-muted/20 py-12">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 bg-primary/10 rounded-lg">
+                <ShieldCheck size={18} weight="duotone" className="text-primary" />
+              </div>
+              <span className="font-medium">Henkel Regulatory Compliance Validator</span>
             </div>
-            <div>
+            <div className="font-light">
               Powered by GPT-4o Vision AI
             </div>
           </div>

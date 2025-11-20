@@ -16,11 +16,11 @@ export function ValidationResults({ result }: ValidationResultsProps) {
   
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <div className="flex items-start gap-4">
+      <Card className="p-8 border-0 shadow-lg">
+        <div className="flex items-start gap-6">
           <div className="flex-shrink-0">
             <StatusIcon
-              size={48}
+              size={56}
               weight="duotone"
               className={
                 result.status === 'pass'
@@ -32,18 +32,18 @@ export function ValidationResults({ result }: ValidationResultsProps) {
             />
           </div>
           
-          <div className="flex-1 space-y-3">
+          <div className="flex-1 space-y-4">
             <div className="flex items-center gap-3 flex-wrap">
-              <h3 className="text-2xl font-bold">Validation Result</h3>
+              <h3 className="text-2xl font-semibold tracking-tight">Validation result</h3>
               <Badge className={getStatusColor(result.status)}>
                 {result.status.toUpperCase()}
               </Badge>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold">Overall Confidence</span>
-                <span className={cn('text-sm font-mono font-bold', getConfidenceColor(result.overallConfidence))}>
+                <span className="text-sm font-medium text-muted-foreground">Overall confidence</span>
+                <span className={cn('text-sm font-mono font-semibold', getConfidenceColor(result.overallConfidence))}>
                   {result.overallConfidence}% ({getConfidenceLabel(result.overallConfidence)})
                 </span>
               </div>
@@ -55,27 +55,27 @@ export function ValidationResults({ result }: ValidationResultsProps) {
         </div>
       </Card>
 
-      <Card className="p-6">
-        <h4 className="text-lg font-semibold mb-4">AI Analysis</h4>
-        <p className="text-sm text-foreground leading-relaxed">{result.aiAnalysis}</p>
+      <Card className="p-8 border-0 shadow-lg">
+        <h4 className="text-lg font-semibold mb-4 tracking-tight">AI analysis</h4>
+        <p className="text-muted-foreground leading-relaxed">{result.aiAnalysis}</p>
       </Card>
 
       {result.detectedSeals.length > 0 && (
-        <Card className="p-6">
-          <h4 className="text-lg font-semibold mb-4">
-            Detected Seals ({result.detectedSeals.length})
+        <Card className="p-8 border-0 shadow-lg">
+          <h4 className="text-lg font-semibold mb-6 tracking-tight">
+            Detected seals ({result.detectedSeals.length})
           </h4>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {result.detectedSeals.map((seal, index) => (
               <div key={index}>
-                <div className="flex items-center justify-between py-2">
+                <div className="flex items-center justify-between py-3">
                   <div className="flex items-center gap-3">
-                    <CheckCircle size={20} weight="fill" className="text-accent" />
-                    <span className="font-semibold">{seal.sealName}</span>
+                    <CheckCircle size={22} weight="fill" className="text-accent" />
+                    <span className="font-medium">{seal.sealName}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Progress value={seal.confidence} className="w-24 h-2" />
-                    <span className={cn('text-sm font-mono font-bold w-16 text-right', getConfidenceColor(seal.confidence))}>
+                  <div className="flex items-center gap-4">
+                    <Progress value={seal.confidence} className="w-28 h-2" />
+                    <span className={cn('text-sm font-mono font-semibold w-16 text-right', getConfidenceColor(seal.confidence))}>
                       {seal.confidence}%
                     </span>
                   </div>
@@ -88,19 +88,19 @@ export function ValidationResults({ result }: ValidationResultsProps) {
       )}
 
       {result.missingSeals.length > 0 && result.detectedSeals.length > 0 && (
-        <Alert>
-          <WarningCircle size={20} weight="fill" />
-          <AlertDescription>
-            <span className="font-semibold">Note:</span> The following seals were not detected in this image: {result.missingSeals.join(', ')}
+        <Alert className="border-warning/20 bg-warning/5">
+          <WarningCircle size={20} weight="fill" className="text-warning" />
+          <AlertDescription className="text-sm">
+            <span className="font-semibold">Note:</span> The following seals were not detected: {result.missingSeals.join(', ')}
           </AlertDescription>
         </Alert>
       )}
 
       {result.detectedSeals.length === 0 && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="border-0 bg-destructive/10">
           <XCircle size={20} weight="fill" />
-          <AlertDescription>
-            <span className="font-semibold">No regulatory seals detected.</span> Please ensure the image contains clear GHS pictograms and try again with a higher quality image.
+          <AlertDescription className="text-sm">
+            <span className="font-semibold">No regulatory seals detected.</span> Ensure the image contains clear GHS pictograms and try again with a higher quality image.
           </AlertDescription>
         </Alert>
       )}

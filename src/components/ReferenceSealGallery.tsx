@@ -7,11 +7,11 @@ export function ReferenceSealGallery() {
   const getCategoryColor = (category: RegulatorySeal['category']) => {
     switch (category) {
       case 'physical':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-blue-50 text-blue-700 border-blue-200';
       case 'health':
-        return 'bg-red-100 text-red-800 border-red-300';
+        return 'bg-red-50 text-red-700 border-red-200';
       case 'environmental':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'bg-green-50 text-green-700 border-green-200';
     }
   };
 
@@ -20,38 +20,39 @@ export function ReferenceSealGallery() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold mb-2">EU Regulatory Seals Reference</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-3xl font-semibold mb-3 tracking-tight">EU regulatory seals</h2>
+        <p className="text-lg text-muted-foreground">
           Complete library of 15 EU CLP/GHS regulatory hazard pictograms used for validation
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {REGULATORY_SEALS.map((seal) => (
-          <Card key={seal.id} className="p-4 hover:shadow-lg transition-shadow">
-            <div className="space-y-3">
-              <div className="aspect-square bg-muted rounded-lg flex items-center justify-center border-2 border-border">
-                <Shield size={64} weight="duotone" className="text-primary" />
+          <Card key={seal.id} className="p-6 hover:shadow-xl transition-all duration-300 border-0 shadow-sm">
+            <div className="space-y-4">
+              <div className="aspect-square bg-muted/30 rounded-2xl flex items-center justify-center border border-border/50">
+                <Shield size={72} weight="duotone" className="text-primary" />
               </div>
               
-              <div className="space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-bold text-sm leading-tight">{seal.name}</h3>
-                  <Badge 
-                    variant="outline" 
-                    className={`text-xs ${getCategoryColor(seal.category)} flex-shrink-0`}
-                  >
-                    {getCategoryLabel(seal.category)}
-                  </Badge>
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-base leading-tight">{seal.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs font-medium ${getCategoryColor(seal.category)}`}
+                    >
+                      {getCategoryLabel(seal.category)}
+                    </Badge>
+                    <span className="text-xs font-mono font-semibold text-primary">
+                      {seal.code}
+                    </span>
+                  </div>
                 </div>
                 
-                <p className="text-xs font-mono font-semibold text-primary">
-                  {seal.code}
-                </p>
-                
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {seal.description}
                 </p>
               </div>
@@ -60,9 +61,9 @@ export function ReferenceSealGallery() {
         ))}
       </div>
 
-      <Card className="p-6 bg-muted/50">
-        <h3 className="font-semibold mb-3">About EU CLP/GHS Pictograms</h3>
-        <div className="space-y-2 text-sm text-muted-foreground">
+      <Card className="p-8 bg-muted/20 border-0 shadow-sm">
+        <h3 className="text-lg font-semibold mb-4 tracking-tight">About EU CLP/GHS pictograms</h3>
+        <div className="space-y-3 text-muted-foreground leading-relaxed">
           <p>
             The Classification, Labelling and Packaging (CLP) Regulation adopts the Globally Harmonized System (GHS) 
             hazard pictograms across the EU to ensure consistent communication of chemical hazards.
