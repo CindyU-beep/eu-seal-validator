@@ -86,10 +86,10 @@ export function Dashboard({ history, onSelectResult }: DashboardProps) {
   if (history.length === 0) {
     return (
       <div className="max-w-6xl mx-auto">
-        <Card className="p-12 border-0 shadow-sm bg-muted/20">
+        <Card className="p-12 border-0 shadow-sm henkel-gradient-subtle">
           <div className="flex flex-col items-center justify-center gap-6 text-center">
-            <div className="rounded-full bg-muted p-8">
-              <ShieldCheck size={56} className="text-muted-foreground/50" weight="duotone" />
+            <div className="rounded-full bg-primary/10 p-8">
+              <ShieldCheck size={56} className="text-primary" weight="duotone" />
             </div>
             <div className="space-y-2">
               <h3 className="text-xl font-semibold">No validation data yet</h3>
@@ -106,68 +106,73 @@ export function Dashboard({ history, onSelectResult }: DashboardProps) {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="p-6 border-0 shadow-sm">
-          <div className="flex items-start justify-between">
+        <Card className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full" />
+          <div className="flex items-start justify-between relative">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Total Validations</p>
-              <p className="text-3xl font-bold">{stats.totalValidations}</p>
+              <p className="text-sm text-muted-foreground font-medium">Total Validations</p>
+              <p className="text-3xl font-bold text-foreground">{stats.totalValidations}</p>
             </div>
-            <div className="rounded-lg bg-primary/10 p-3">
-              <ShieldCheck size={28} weight="duotone" className="text-primary" />
+            <div className="rounded-xl henkel-gradient p-3 shadow-sm">
+              <ShieldCheck size={28} weight="duotone" className="text-white" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 border-0 shadow-sm">
-          <div className="flex items-start justify-between">
+        <Card className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full" />
+          <div className="flex items-start justify-between relative">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Unique Products</p>
-              <p className="text-3xl font-bold">{stats.uniqueProducts}</p>
+              <p className="text-sm text-muted-foreground font-medium">Unique Products</p>
+              <p className="text-3xl font-bold text-foreground">{stats.uniqueProducts}</p>
             </div>
-            <div className="rounded-lg bg-accent/10 p-3">
+            <div className="rounded-xl bg-accent/10 p-3 border border-accent/20">
               <Package size={28} weight="duotone" className="text-accent" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 border-0 shadow-sm">
-          <div className="flex items-start justify-between">
+        <Card className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full" />
+          <div className="flex items-start justify-between relative">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Pass Rate</p>
-              <p className="text-3xl font-bold">{stats.passRate}%</p>
+              <p className="text-sm text-muted-foreground font-medium">Pass Rate</p>
+              <p className="text-3xl font-bold text-accent">{stats.passRate}%</p>
             </div>
-            <div className="rounded-lg bg-accent/10 p-3">
+            <div className="rounded-xl bg-accent/10 p-3 border border-accent/20">
               <TrendUp size={28} weight="duotone" className="text-accent" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 border-0 shadow-sm">
-          <div className="flex items-start justify-between">
+        <Card className="p-6 border-0 shadow-md hover:shadow-lg transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full" />
+          <div className="flex items-start justify-between relative">
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Seals Detected</p>
-              <p className="text-3xl font-bold">{stats.totalSealsDetected}</p>
+              <p className="text-sm text-muted-foreground font-medium">Seals Detected</p>
+              <p className="text-3xl font-bold text-foreground">{stats.totalSealsDetected}</p>
             </div>
-            <div className="rounded-lg bg-secondary/50 p-3">
-              <Seal size={28} weight="duotone" className="text-secondary-foreground" />
+            <div className="rounded-xl bg-secondary p-3 border border-border">
+              <Seal size={28} weight="duotone" className="text-primary" />
             </div>
           </div>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="p-6 border-0 shadow-sm">
-          <h3 className="text-lg font-semibold mb-6">Validation Status</h3>
-          <div className="space-y-6">
+        <Card className="p-6 border-0 shadow-md relative overflow-hidden">
+          <div className="absolute left-0 top-0 bottom-0 w-1 henkel-gradient" />
+          <h3 className="text-lg font-semibold mb-6 pl-4">Validation Status</h3>
+          <div className="space-y-6 pl-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="font-medium">Passed</span>
                   <span className="text-sm text-muted-foreground">{stats.passCount} validations</span>
                 </div>
-                <span className="text-sm font-medium">{stats.passRate}%</span>
+                <span className="text-sm font-semibold text-accent">{stats.passRate}%</span>
               </div>
-              <Progress value={(stats.passCount / stats.totalValidations) * 100} className="h-2" />
+              <Progress value={(stats.passCount / stats.totalValidations) * 100} className="h-2.5" />
             </div>
 
             <div className="space-y-2">
@@ -176,9 +181,9 @@ export function Dashboard({ history, onSelectResult }: DashboardProps) {
                   <span className="font-medium">Failed</span>
                   <span className="text-sm text-muted-foreground">{stats.failCount} validations</span>
                 </div>
-                <span className="text-sm font-medium">{Math.round((stats.failCount / stats.totalValidations) * 100)}%</span>
+                <span className="text-sm font-semibold text-destructive">{Math.round((stats.failCount / stats.totalValidations) * 100)}%</span>
               </div>
-              <Progress value={(stats.failCount / stats.totalValidations) * 100} className="h-2" />
+              <Progress value={(stats.failCount / stats.totalValidations) * 100} className="h-2.5" />
             </div>
 
             <div className="space-y-2">
@@ -187,46 +192,48 @@ export function Dashboard({ history, onSelectResult }: DashboardProps) {
                   <span className="font-medium">Warnings</span>
                   <span className="text-sm text-muted-foreground">{stats.warningCount} validations</span>
                 </div>
-                <span className="text-sm font-medium">{Math.round((stats.warningCount / stats.totalValidations) * 100)}%</span>
+                <span className="text-sm font-semibold text-warning-foreground">{Math.round((stats.warningCount / stats.totalValidations) * 100)}%</span>
               </div>
-              <Progress value={(stats.warningCount / stats.totalValidations) * 100} className="h-2" />
+              <Progress value={(stats.warningCount / stats.totalValidations) * 100} className="h-2.5" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 border-0 shadow-sm">
-          <h3 className="text-lg font-semibold mb-6">Top Detected Seals</h3>
+        <Card className="p-6 border-0 shadow-md relative overflow-hidden">
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent" />
+          <h3 className="text-lg font-semibold mb-6 pl-4">Top Detected Seals</h3>
           {stats.topDetectedSeals.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-4 pl-4">
               {stats.topDetectedSeals.map((seal, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-sm">{seal.name}</span>
-                    <span className="text-sm text-muted-foreground">{seal.count} times</span>
+                    <Badge variant="secondary" className="font-semibold">{seal.count}×</Badge>
                   </div>
                   <Progress 
                     value={(seal.count / stats.totalSealsDetected) * 100} 
-                    className="h-2"
+                    className="h-2.5"
                   />
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No seals detected yet</p>
+            <p className="text-sm text-muted-foreground pl-4">No seals detected yet</p>
           )}
         </Card>
       </div>
 
-      <Card className="p-6 border-0 shadow-sm">
-        <h3 className="text-lg font-semibold mb-6">Recent Activity</h3>
-        <div className="space-y-4">
+      <Card className="p-6 border-0 shadow-md relative overflow-hidden">
+        <div className="absolute left-0 top-0 bottom-0 w-1 henkel-gradient" />
+        <h3 className="text-lg font-semibold mb-6 pl-4">Recent Activity</h3>
+        <div className="space-y-3 pl-4">
           {stats.recentActivity.map((result) => (
             <div 
               key={result.id} 
-              className="flex items-center gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+              className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/60 border border-transparent hover:border-primary/20 transition-all cursor-pointer group"
               onClick={() => onSelectResult?.(result)}
             >
-              <div className="shrink-0 w-16 h-16 rounded-lg bg-muted overflow-hidden">
+              <div className="shrink-0 w-16 h-16 rounded-lg bg-muted overflow-hidden border-2 border-background shadow-sm group-hover:border-primary/30 transition-colors">
                 <img
                   src={result.imageUrl}
                   alt={result.fileName}
@@ -234,7 +241,7 @@ export function Dashboard({ history, onSelectResult }: DashboardProps) {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{result.fileName}</p>
+                <p className="font-semibold truncate text-foreground group-hover:text-primary transition-colors">{result.fileName}</p>
                 <p className="text-sm text-muted-foreground">
                   {new Date(result.timestamp).toLocaleDateString()} • {result.detectedSeals.filter(s => s.present).length} seals detected
                 </p>

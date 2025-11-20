@@ -23,36 +23,42 @@
 }
 
 :root {
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.15 0 0);
+  --henkel-red: oklch(0.48 0.22 27);
+  --henkel-red-dark: oklch(0.42 0.24 27);
+  --henkel-red-light: oklch(0.54 0.20 27);
+  --henkel-grey: oklch(0.35 0.01 260);
+  --henkel-blue: oklch(0.45 0.15 245);
+  
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.20 0 0);
   
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0 0);
+  --card-foreground: oklch(0.20 0 0);
   
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.20 0 0);
   
-  --primary: oklch(0.45 0.20 25);
+  --primary: var(--henkel-red);
   --primary-foreground: oklch(1 0 0);
   
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.2 0 0);
+  --secondary: oklch(0.96 0.01 260);
+  --secondary-foreground: var(--henkel-grey);
   
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.45 0 0);
+  --muted-foreground: oklch(0.48 0.01 260);
   
-  --accent: oklch(0.50 0.20 160);
+  --accent: oklch(0.52 0.18 160);
   --accent-foreground: oklch(1 0 0);
   
-  --destructive: oklch(0.55 0.22 25);
+  --destructive: oklch(0.52 0.24 25);
   --destructive-foreground: oklch(1 0 0);
   
-  --warning: oklch(0.70 0.15 85);
-  --warning-foreground: oklch(0.15 0 0);
+  --warning: oklch(0.72 0.16 85);
+  --warning-foreground: oklch(0.20 0 0);
   
-  --border: oklch(0.92 0 0);
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.45 0.20 25);
+  --border: oklch(0.90 0 0);
+  --input: oklch(0.90 0 0);
+  --ring: var(--henkel-red);
   
   --radius: 0.75rem;
 }
@@ -79,6 +85,11 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-henkel-red: var(--henkel-red);
+  --color-henkel-red-dark: var(--henkel-red-dark);
+  --color-henkel-red-light: var(--henkel-red-light);
+  --color-henkel-grey: var(--henkel-grey);
+  --color-henkel-blue: var(--henkel-blue);
   
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: var(--radius);
@@ -86,4 +97,27 @@
   --radius-xl: calc(var(--radius) * 2);
   --radius-2xl: calc(var(--radius) * 3);
   --radius-full: 9999px;
+}
+
+.henkel-gradient {
+  background: linear-gradient(135deg, var(--henkel-red) 0%, var(--henkel-red-dark) 100%);
+}
+
+.henkel-gradient-subtle {
+  background: linear-gradient(135deg, oklch(0.99 0.01 27) 0%, oklch(0.97 0.01 27) 100%);
+}
+
+.henkel-accent-line {
+  position: relative;
+}
+
+.henkel-accent-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--henkel-red);
+  border-radius: 2px;
 }

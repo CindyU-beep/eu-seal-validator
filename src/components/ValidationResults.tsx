@@ -24,11 +24,12 @@ export function ValidationResults({ result }: ValidationResultsProps) {
   return (
     <div className="space-y-6">
       {result.annotatedImageUrl && (
-        <Card className="p-8 border-0 shadow-lg">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
+        <Card className="p-8 border-0 shadow-lg relative overflow-hidden">
+          <div className="absolute left-0 top-0 bottom-0 w-1 henkel-gradient" />
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-4 pl-4">
             <h4 className="text-lg font-semibold tracking-tight">Detected seals visualization</h4>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-muted/50 px-4 py-2 rounded-full">
+              <div className="flex items-center gap-2 bg-muted/50 px-4 py-2 rounded-full border border-border">
                 <Label htmlFor="toggle-view" className="text-sm font-medium cursor-pointer">
                   {showAnnotated ? 'Annotated' : 'Original'}
                 </Label>
@@ -40,7 +41,7 @@ export function ValidationResults({ result }: ValidationResultsProps) {
               </div>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="gap-2 hover:border-primary hover:text-primary">
                     <Eye size={16} weight="duotone" />
                     View Full Size
                   </Button>
@@ -72,20 +73,20 @@ export function ValidationResults({ result }: ValidationResultsProps) {
               </Dialog>
             </div>
           </div>
-          <div className="relative rounded-lg overflow-hidden border border-border bg-muted/20">
+          <div className="relative rounded-lg overflow-hidden border-2 border-primary/10 bg-muted/20 shadow-md">
             <img
               src={showAnnotated ? result.annotatedImageUrl : result.imageUrl}
               alt={showAnnotated ? "Annotated label with detected seals" : "Original label"}
               className="w-full h-auto transition-opacity duration-200"
             />
-            <div className="absolute top-3 left-3 flex items-center gap-2 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border shadow-lg">
+            <div className="absolute top-3 left-3 flex items-center gap-2 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-full border-2 border-primary/20 shadow-lg">
               <ImagesSquare size={16} weight="duotone" className="text-primary" />
-              <span className="text-xs font-medium">
+              <span className="text-xs font-semibold">
                 {showAnnotated ? 'Annotated View' : 'Original View'}
               </span>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-3 text-center">
+          <p className="text-xs text-muted-foreground mt-3 text-center pl-4">
             {showAnnotated 
               ? 'Red boxes indicate detected regulatory seals with confidence scores' 
               : 'Original uploaded image without annotations'}
@@ -93,9 +94,10 @@ export function ValidationResults({ result }: ValidationResultsProps) {
         </Card>
       )}
 
-      <Card className="p-8 border-0 shadow-lg">
-        <div className="flex items-start gap-6">
-          <div className="flex-shrink-0">
+      <Card className="p-8 border-0 shadow-lg relative overflow-hidden">
+        <div className="absolute left-0 top-0 bottom-0 w-1 henkel-gradient" />
+        <div className="flex items-start gap-6 pl-4">
+          <div className="flex-shrink-0 p-3 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5">
             <StatusIcon
               size={56}
               weight="duotone"

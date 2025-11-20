@@ -77,15 +77,16 @@ function App() {
     if (showHistoryDetail && selectedHistoryResult) {
       return (
         <div className="min-h-screen bg-background">
-          <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-            <div className="container mx-auto px-6 lg:px-12 py-5">
+          <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] to-transparent pointer-events-none" />
+            <div className="container mx-auto px-6 lg:px-12 py-5 relative">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <img src={henkelLogo} alt="Henkel" className="h-10 w-auto object-contain" />
-                  <div className="h-8 w-px bg-border" />
+                  <img src={henkelLogo} alt="Henkel" className="h-12 w-auto object-contain" />
+                  <div className="h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
                   <div className="flex items-center gap-3">
-                    <div className="rounded-xl bg-primary p-2.5">
-                      <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+                    <div className="rounded-xl henkel-gradient p-2.5 shadow-sm">
+                      <ShieldCheck size={24} weight="bold" className="text-white" />
                     </div>
                     <div>
                       <h1 className="text-xl font-bold tracking-tight">Validator</h1>
@@ -100,7 +101,7 @@ function App() {
                       setShowHistoryDetail(false);
                       setSelectedHistoryResult(null);
                     }}
-                    className="rounded-full gap-2"
+                    className="rounded-full gap-2 hover:bg-primary/5"
                   >
                     <ChartBar size={18} weight="duotone" />
                     Back to Dashboard
@@ -108,7 +109,7 @@ function App() {
                   <Button
                     variant="ghost"
                     onClick={() => setShowLanding(true)}
-                    className="rounded-full"
+                    className="rounded-full hover:bg-primary/5"
                   >
                     Home
                   </Button>
@@ -132,15 +133,16 @@ function App() {
 
     return (
       <div className="min-h-screen bg-background">
-        <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-          <div className="container mx-auto px-6 lg:px-12 py-5">
+        <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] to-transparent pointer-events-none" />
+          <div className="container mx-auto px-6 lg:px-12 py-5 relative">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <img src={henkelLogo} alt="Henkel" className="h-10 w-auto object-contain" />
-                <div className="h-8 w-px bg-border" />
+                <img src={henkelLogo} alt="Henkel" className="h-12 w-auto object-contain" />
+                <div className="h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
                 <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-primary p-2.5">
-                    <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+                  <div className="rounded-xl henkel-gradient p-2.5 shadow-sm">
+                    <ShieldCheck size={24} weight="bold" className="text-white" />
                   </div>
                   <div>
                     <h1 className="text-xl font-bold tracking-tight">Validator</h1>
@@ -152,7 +154,7 @@ function App() {
                 <Button
                   variant="ghost"
                   onClick={() => setShowDashboard(false)}
-                  className="rounded-full gap-2"
+                  className="rounded-full gap-2 hover:bg-primary/5"
                 >
                   <ShieldCheck size={18} weight="duotone" />
                   Validator
@@ -160,7 +162,7 @@ function App() {
                 <Button
                   variant="ghost"
                   onClick={() => setShowLanding(true)}
-                  className="rounded-full"
+                  className="rounded-full hover:bg-primary/5"
                 >
                   Home
                 </Button>
@@ -181,15 +183,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-6 lg:px-12 py-5">
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] to-transparent pointer-events-none" />
+        <div className="container mx-auto px-6 lg:px-12 py-5 relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src={henkelLogo} alt="Henkel" className="h-10 w-auto object-contain" />
-              <div className="h-8 w-px bg-border" />
+              <img src={henkelLogo} alt="Henkel" className="h-12 w-auto object-contain" />
+              <div className="h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
               <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-primary p-2.5">
-                  <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+                <div className="rounded-xl henkel-gradient p-2.5 shadow-sm">
+                  <ShieldCheck size={24} weight="bold" className="text-white" />
                 </div>
                 <div>
                   <h1 className="text-xl font-bold tracking-tight">Validator</h1>
@@ -201,7 +204,7 @@ function App() {
               <Button
                 variant="ghost"
                 onClick={() => setShowDashboard(true)}
-                className="rounded-full gap-2"
+                className="rounded-full gap-2 hover:bg-primary/5"
               >
                 <ChartBar size={18} weight="duotone" />
                 Dashboard
@@ -209,7 +212,7 @@ function App() {
               <Button
                 variant="ghost"
                 onClick={() => setShowLanding(true)}
-                className="rounded-full"
+                className="rounded-full hover:bg-primary/5"
               >
                 Home
               </Button>
