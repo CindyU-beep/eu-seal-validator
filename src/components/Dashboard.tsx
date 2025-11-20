@@ -1,12 +1,25 @@
 import { useMemo } from 'react';
+import { ShieldCheck, CheckCircle, WarningCircle, XCircle, TrendUp } from '@phosphor-icons/react';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { type ValidationResult } from '@/lib
+import { Progress } from '@/components/ui/progress';
+import { type ValidationResult } from '@/lib/sealData';
+
 interface DashboardProps {
+  history: ValidationResult[];
 }
 
-    if (history.length ===
-  history: ValidationResult[];
+function getStatusColorClass(status: 'pass' | 'fail' | 'warning'): string {
+  switch (status) {
+    case 'pass':
+      return 'bg-accent text-accent-foreground';
+    case 'fail':
+      return 'bg-destructive text-destructive-foreground';
+    case 'warning':
+      return 'bg-warning text-warning-foreground';
+    default:
+      return 'bg-muted text-muted-foreground';
+  }
 }
 
 export function Dashboard({ history }: DashboardProps) {
@@ -14,73 +27,75 @@ export function Dashboard({ history }: DashboardProps) {
     if (history.length === 0) {
       return {
         totalValidations: 0,
-        uniqueProduct
+        uniqueProducts: 0,
+        passCount: 0,
+        failCount: 0,
+        warningCount: 0,
+        passRate: 0,
+        averageConfidence: 0,
+        totalSealsDetected: 0,
+        topDetectedSeals: [],
+        recentActivity: [],
       };
+    }
 
-    const warningCou
-    const totalConfidence = h
+    const passCount = history.filter(r => r.status === 'pass').length;
+    const failCount = history.filter(r => r.status === 'fail').length;
+    const warningCount = history.filter(r => r.status === 'warning').length;
     
-      result.detectedSeals.for
+    const totalConfidence = history.reduce((sum, result) => sum + result.overallConfidence, 0);
+    const averageConfidence = Math.round(totalConfidence / history.length);
+    
+    const uniqueProducts = new Set(history.map(r => r.fileName)).size;
+    
+    const sealCounts = new Map<string, number>();
+    let totalSealsDetected = 0;
+    
+    history.forEach(result => {
+      result.detectedSeals.forEach(seal => {
+        if (seal.present) {
+          totalSealsDetected++;
+          const count = sealCounts.get(seal.sealName) || 0;
+          sealCounts.set(seal.sealName, count + 1);
+        }
       });
+    });
+    
+    const topDetectedSeals = Array.from(sealCounts.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
 
-      .m
-     
+    const recentActivity = history.slice(0, 5);
 
-
+    return {
       totalValidations: history.length,
+      uniqueProducts,
+      passCount,
+      failCount,
       warningCount,
       passRate: Math.round((passCount / history.length) * 100),
-      topDetectedSeals: topSeals,
-    
+      averageConfidence,
+      totalSealsDetected,
+      topDetectedSeals,
+      recentActivity,
     };
+  }, [history]);
 
+  if (history.length === 0) {
     return (
-        <
-       
-
-
-          <div className="flex flex-col items-ce
-              <ShieldCheck size={56} cla
-            <div cl
-
+      <div className="max-w-6xl mx-auto">
+        <Card className="p-12 border-0 shadow-sm bg-muted/20">
+          <div className="flex flex-col items-center justify-center gap-6 text-center">
+            <div className="rounded-full bg-muted p-8">
+              <ShieldCheck size={56} className="text-muted-foreground/50" weight="duotone" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold">No validation data yet</h3>
+              <p className="text-muted-foreground max-w-sm mx-auto">
+                Start validating product labels to see your dashboard metrics
               </p>
-          </div>
-
-  }
-  return (
-      <div class
-        <p classNam
-        </p>
-
-        <Card className="p-6 border-0 shadow-lg">
-            <div className="space
-              <p classNam
-            <div clas
             </div>
-      
-            <spa
-
-        <Card className="p-6 
-            
-              <p className="text-3xl font
-            <div className="ro
-            </div>
-          <Progress value={stats.passRate} clas
-
-          <div
-              
-
-              <WarningCircle size={28} weight="duotone" classN
-          </div>
-        </Card>
-        <Card className="p-6 border-0 shadow-lg">
-            <div c
-              <p className="text-3xl fo
-            <div className="rounded-full bg-secondary p-3">
-            </div>
-        </Card>
-
-        <Card clas
           </div>
         </Card>
       </div>
