@@ -58,3 +58,76 @@ export function getConfidenceColor(confidence: number): string {
   if (confidence >= 60) return 'text-warning-foreground';
   return 'text-destructive';
 }
+
+interface BoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface AnnotationData {
+  sealName: string;
+  confidence: number;
+  boundingBox: BoundingBox;
+}
+
+export async function drawBoundingBoxes(
+  imageBase64: string,
+  annotations: AnnotationData[]
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        reject(new Error('Failed to get canvas context'));
+        return;
+      }
+      
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      ctx.drawImage(img, 0, 0);
+      
+      annotations.forEach(({ sealName, confidence, boundingBox }) => {
+        const x = boundingBox.x * img.width;
+        const y = boundingBox.y * img.height;
+        const width = boundingBox.width * img.width;
+        const height = boundingBox.height * img.height;
+        
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(x, y, width, height);
+        
+        const label = `${sealName} (${confidence}%)`;
+        const padding = 8;
+        const fontSize = 16;
+        ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+        const textMetrics = ctx.measureText(label);
+        const textWidth = textMetrics.width;
+        const textHeight = fontSize;
+        
+        const labelY = y > textHeight + padding * 2 ? y - padding : y + height + textHeight + padding;
+        
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(x, labelY - textHeight - padding, textWidth + padding * 2, textHeight + padding * 2);
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.textBaseline = 'top';
+        ctx.fillText(label, x + padding, labelY - textHeight - padding / 2);
+      });
+      
+      resolve(canvas.toDataURL('image/png'));
+    };
+    
+    img.onerror = () => {
+      reject(new Error('Failed to load image'));
+    };
+    
+    img.src = imageBase64;
+  });
+}

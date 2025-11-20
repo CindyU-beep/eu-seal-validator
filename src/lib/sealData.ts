@@ -16,6 +16,7 @@ export interface ValidationResult {
   missingSeals: string[];
   overallConfidence: number;
   aiAnalysis: string;
+  annotatedImageUrl?: string;
 }
 
 export interface DetectedSeal {
@@ -23,6 +24,12 @@ export interface DetectedSeal {
   sealName: string;
   confidence: number;
   present: boolean;
+  boundingBox?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 
 export const REGULATORY_SEALS: RegulatorySeal[] = [

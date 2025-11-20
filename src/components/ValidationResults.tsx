@@ -1,9 +1,11 @@
-import { CheckCircle, WarningCircle, XCircle } from '@phosphor-icons/react';
+import { CheckCircle, WarningCircle, XCircle, Eye } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { type ValidationResult } from '@/lib/sealData';
 import { getStatusColor, getConfidenceLabel, getConfidenceColor } from '@/lib/imageUtils';
 
@@ -16,6 +18,44 @@ export function ValidationResults({ result }: ValidationResultsProps) {
   
   return (
     <div className="space-y-6">
+      {result.annotatedImageUrl && (
+        <Card className="p-8 border-0 shadow-lg">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold tracking-tight">Detected seals visualization</h4>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Eye size={16} weight="duotone" />
+                  View Full Size
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
+                <DialogHeader>
+                  <DialogTitle>Annotated Image - {result.fileName}</DialogTitle>
+                </DialogHeader>
+                <div className="mt-4">
+                  <img
+                    src={result.annotatedImageUrl}
+                    alt="Annotated label with detected seals"
+                    className="w-full h-auto"
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <div className="relative rounded-lg overflow-hidden border border-border bg-muted/20">
+            <img
+              src={result.annotatedImageUrl}
+              alt="Annotated label with detected seals"
+              className="w-full h-auto"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground mt-3 text-center">
+            Red boxes indicate detected regulatory seals with confidence scores
+          </p>
+        </Card>
+      )}
+
       <Card className="p-8 border-0 shadow-lg">
         <div className="flex items-start gap-6">
           <div className="flex-shrink-0">
