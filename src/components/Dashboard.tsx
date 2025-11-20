@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/prog
+import { Progress } from '@/components/ui/progress';
+import { Card } from '@/components/ui/card';
+import { ShieldCheck, TrendUp, Package, Seal } from '@phosphor-icons/react';
+import { type ValidationResult } from '@/lib/sealData';
 
-  history: ValidationResult[];
-
-
-      return 'bg-accent te
+interface DashboardProps {
   history: ValidationResult[];
 }
 
@@ -19,7 +19,7 @@ function getStatusColorClass(status: 'pass' | 'fail' | 'warning'): string {
       return 'bg-warning text-warning-foreground';
     default:
       return 'bg-muted text-muted-foreground';
-   
+  }
 }
 
 export function Dashboard({ history }: DashboardProps) {
@@ -89,178 +89,158 @@ export function Dashboard({ history }: DashboardProps) {
           <div className="flex flex-col items-center justify-center gap-6 text-center">
             <div className="rounded-full bg-muted p-8">
               <ShieldCheck size={56} className="text-muted-foreground/50" weight="duotone" />
-      <div classNa
+            </div>
             <div className="space-y-2">
               <h3 className="text-xl font-semibold">No validation data yet</h3>
               <p className="text-muted-foreground max-w-sm mx-auto">
                 Start validating product labels to see your dashboard metrics
               </p>
-          </div>
-            </di
-              <
-            
-      
-   
-
-          
-              <p className="text-sm text-muted-fo
             </div>
-              <ShieldCheck size={28} weight="duotone" className="text-seconda
           </div>
+        </Card>
       </div>
-      <div c
-          <h
+    );
+  }
 
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">P
-                <span className="text-sm text-muted-foreground">{s
-              <Progress value={(stats.p
-
-              <div className="flex items-center justify-between">
-                  
-                </div>
-              </div>
+  return (
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="p-6 border-0 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Total Validations</p>
+              <p className="text-3xl font-bold">{stats.totalValidations}</p>
             </div>
-            <div
+            <div className="rounded-lg bg-primary/10 p-3">
+              <ShieldCheck size={28} weight="duotone" className="text-primary" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 border-0 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Unique Products</p>
+              <p className="text-3xl font-bold">{stats.uniqueProducts}</p>
+            </div>
+            <div className="rounded-lg bg-accent/10 p-3">
+              <Package size={28} weight="duotone" className="text-accent" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 border-0 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Pass Rate</p>
+              <p className="text-3xl font-bold">{stats.passRate}%</p>
+            </div>
+            <div className="rounded-lg bg-accent/10 p-3">
+              <TrendUp size={28} weight="duotone" className="text-accent" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 border-0 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Seals Detected</p>
+              <p className="text-3xl font-bold">{stats.totalSealsDetected}</p>
+            </div>
+            <div className="rounded-lg bg-secondary/50 p-3">
+              <Seal size={28} weight="duotone" className="text-secondary-foreground" />
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="p-6 border-0 shadow-sm">
+          <h3 className="text-lg font-semibold mb-6">Validation Status</h3>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Passed</span>
+                  <span className="text-sm text-muted-foreground">{stats.passCount} validations</span>
+                </div>
+                <span className="text-sm font-medium">{stats.passRate}%</span>
+              </div>
+              <Progress value={(stats.passCount / stats.totalValidations) * 100} className="h-2" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="font-medium">Failed</span>
-                <span className="text-sm text-muted-foreground">{stats.f
-              <P
-          </div
+                  <span className="text-sm text-muted-foreground">{stats.failCount} validations</span>
+                </div>
+                <span className="text-sm font-medium">{Math.round((stats.failCount / stats.totalValidations) * 100)}%</span>
+              </div>
+              <Progress value={(stats.failCount / stats.totalValidations) * 100} className="h-2" />
+            </div>
 
-          <h3 className="text-lg font-semibold mb
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Warnings</span>
+                  <span className="text-sm text-muted-foreground">{stats.warningCount} validations</span>
+                </div>
+                <span className="text-sm font-medium">{Math.round((stats.warningCount / stats.totalValidations) * 100)}%</span>
+              </div>
+              <Progress value={(stats.warningCount / stats.totalValidations) * 100} className="h-2" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 border-0 shadow-sm">
+          <h3 className="text-lg font-semibold mb-6">Top Detected Seals</h3>
+          {stats.topDetectedSeals.length > 0 ? (
             <div className="space-y-4">
-                <div key={index} classN
+              {stats.topDetectedSeals.map((seal, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center justify-between">
                     <span className="font-medium text-sm">{seal.name}</span>
+                    <span className="text-sm text-muted-foreground">{seal.count} times</span>
                   </div>
-                  
+                  <Progress 
+                    value={(seal.count / stats.totalSealsDetected) * 100} 
+                    className="h-2"
                   />
+                </div>
               ))}
+            </div>
           ) : (
+            <p className="text-sm text-muted-foreground">No seals detected yet</p>
           )}
+        </Card>
       </div>
-      <Card cla
 
-            const statusColor = result.status ===
-            
-              <div key={result.id} clas
-                  <img
-                    alt={result.fileName}
-                  
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-muted-foreground">
-                  
-                
-                  <Badge className={getStatusColorClass(result.status)
-               
-
-          })}
+      <Card className="p-6 border-0 shadow-sm">
+        <h3 className="text-lg font-semibold mb-6">Recent Activity</h3>
+        <div className="space-y-4">
+          {stats.recentActivity.map((result) => (
+            <div key={result.id} className="flex items-center gap-4 p-4 rounded-lg bg-muted/30">
+              <div className="shrink-0 w-16 h-16 rounded-lg bg-muted overflow-hidden">
+                <img
+                  src={result.imageUrl}
+                  alt={result.fileName}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium truncate">{result.fileName}</p>
+                <p className="text-sm text-muted-foreground">
+                  {new Date(result.timestamp).toLocaleDateString()} • {result.detectedSeals.filter(s => s.present).length} seals detected
+                </p>
+              </div>
+              <Badge className={getStatusColorClass(result.status)}>
+                {result.status}
+              </Badge>
+            </div>
+          ))}
+        </div>
       </Card>
+    </div>
   );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
