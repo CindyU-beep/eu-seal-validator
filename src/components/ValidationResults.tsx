@@ -1,4 +1,5 @@
-import { CheckCircle, WarningCircle, XCircle, Eye } from '@phosphor-icons/react';
+import { useState } from 'react';
+import { CheckCircle, WarningCircle, XCircle, Eye, ImagesSquare } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -6,6 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { type ValidationResult } from '@/lib/sealData';
 import { getStatusColor, getConfidenceLabel, getConfidenceColor } from '@/lib/imageUtils';
 
@@ -15,43 +18,77 @@ interface ValidationResultsProps {
 
 export function ValidationResults({ result }: ValidationResultsProps) {
   const StatusIcon = result.status === 'pass' ? CheckCircle : result.status === 'warning' ? WarningCircle : XCircle;
+  const [showAnnotated, setShowAnnotated] = useState(true);
+  const [showAnnotatedInDialog, setShowAnnotatedInDialog] = useState(true);
   
   return (
     <div className="space-y-6">
       {result.annotatedImageUrl && (
         <Card className="p-8 border-0 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
             <h4 className="text-lg font-semibold tracking-tight">Detected seals visualization</h4>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Eye size={16} weight="duotone" />
-                  View Full Size
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
-                <DialogHeader>
-                  <DialogTitle>Annotated Image - {result.fileName}</DialogTitle>
-                </DialogHeader>
-                <div className="mt-4">
-                  <img
-                    src={result.annotatedImageUrl}
-                    alt="Annotated label with detected seals"
-                    className="w-full h-auto"
-                  />
-                </div>
-              </DialogContent>
-            </Dialog>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 bg-muted/50 px-4 py-2 rounded-full">
+                <Label htmlFor="toggle-view" className="text-sm font-medium cursor-pointer">
+                  {showAnnotated ? 'Annotated' : 'Original'}
+                </Label>
+                <Switch
+                  id="toggle-view"
+                  checked={showAnnotated}
+                  onCheckedChange={setShowAnnotated}
+                />
+              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Eye size={16} weight="duotone" />
+                    View Full Size
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center justify-between pr-8">
+                      <span>{showAnnotatedInDialog ? 'Annotated' : 'Original'} Image - {result.fileName}</span>
+                      <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full">
+                        <Label htmlFor="toggle-view-dialog" className="text-sm font-medium cursor-pointer">
+                          {showAnnotatedInDialog ? 'Annotated' : 'Original'}
+                        </Label>
+                        <Switch
+                          id="toggle-view-dialog"
+                          checked={showAnnotatedInDialog}
+                          onCheckedChange={setShowAnnotatedInDialog}
+                        />
+                      </div>
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="mt-4">
+                    <img
+                      src={showAnnotatedInDialog ? result.annotatedImageUrl : result.imageUrl}
+                      alt={showAnnotatedInDialog ? "Annotated label with detected seals" : "Original label"}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
           <div className="relative rounded-lg overflow-hidden border border-border bg-muted/20">
             <img
-              src={result.annotatedImageUrl}
-              alt="Annotated label with detected seals"
-              className="w-full h-auto"
+              src={showAnnotated ? result.annotatedImageUrl : result.imageUrl}
+              alt={showAnnotated ? "Annotated label with detected seals" : "Original label"}
+              className="w-full h-auto transition-opacity duration-200"
             />
+            <div className="absolute top-3 left-3 flex items-center gap-2 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border shadow-lg">
+              <ImagesSquare size={16} weight="duotone" className="text-primary" />
+              <span className="text-xs font-medium">
+                {showAnnotated ? 'Annotated View' : 'Original View'}
+              </span>
+            </div>
           </div>
           <p className="text-xs text-muted-foreground mt-3 text-center">
-            Red boxes indicate detected regulatory seals with confidence scores
+            {showAnnotated 
+              ? 'Red boxes indicate detected regulatory seals with confidence scores' 
+              : 'Original uploaded image without annotations'}
           </p>
         </Card>
       )}
