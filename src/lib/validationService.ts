@@ -22,6 +22,9 @@ Your task:
 4. List any pictograms that appear to be missing or unclear
 5. Provide an overall assessment of the label's compliance quality
 
+IMAGE TO ANALYZE:
+${imageBase64}
+
 Return your analysis as a JSON object with this exact structure:
 {
   "detectedSeals": [
@@ -44,7 +47,20 @@ Note:
 
   try {
     const response = await window.spark.llm(promptText, 'gpt-4o', true);
-    const analysis = JSON.parse(response);
+    
+    let analysis;
+    try {
+      analysis = JSON.parse(response);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      console.error('Response was:', response);
+      throw new Error('Failed to parse validation response. Please try again.');
+    }
+
+    if (!analysis.detectedSeals || !Array.isArray(analysis.detectedSeals)) {
+      console.error('Invalid response structure:', analysis);
+      throw new Error('Invalid response format from validation service.');
+    }
 
     const detectedSealIds = new Set(
       analysis.detectedSeals.map((seal: DetectedSeal) => seal.sealId)
@@ -69,6 +85,9 @@ Note:
     return result;
   } catch (error) {
     console.error('Validation error:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
     throw new Error('Failed to validate image. Please try again.');
   }
 }
