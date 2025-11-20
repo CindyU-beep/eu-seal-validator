@@ -63,22 +63,22 @@ An AI-powered automated system to validate product label images against EU (CLP/
 - **Empty reference library**: Graceful handling if regulatory seals not yet loaded
 
 ## Design Direction
-The interface should evoke trust, precision, and corporate professionalism—reflecting Henkel's enterprise standards. Design should feel authoritative and serious, with a clean minimal interface that keeps focus on the validation task. The aesthetic should lean toward technical precision rather than playful, using clear visual hierarchy to guide compliance officers through the validation workflow.
+The interface should evoke trust, precision, and corporate professionalism—reflecting Henkel's enterprise standards and brand identity. Design should feel authoritative and serious, with a clean minimal interface that keeps focus on the validation task. The aesthetic should lean toward technical precision rather than playful, using Henkel's signature red as the primary brand color, combined with clear visual hierarchy to guide compliance officers through the validation workflow.
 
 ## Color Selection
-Complementary color scheme emphasizing trust (blues) and validation states (green for pass, amber for warning, red for fail)
+Custom palette emphasizing Henkel's signature red brand color combined with validation states (green for pass, amber for warning, red tones for fail)
 
-- **Primary Color**: Deep Professional Blue (oklch(0.45 0.15 250)) - Communicates trust, authority, and corporate professionalism
+- **Primary Color**: Henkel Red (oklch(0.45 0.20 25)) - Communicates Henkel's brand identity, authority, and corporate professionalism
 - **Secondary Colors**: 
-  - Neutral Gray (oklch(0.95 0 0)) - For backgrounds and subtle UI elements
+  - Neutral Gray (oklch(0.96 0 0)) - For backgrounds and subtle UI elements
   - Cool Slate (oklch(0.65 0.02 240)) - For secondary actions and informational content
-- **Accent Color**: Validation Green (oklch(0.65 0.18 145)) - For success states, approved validations, and positive CTAs
+- **Accent Color**: Validation Green (oklch(0.50 0.20 160)) - For success states, approved validations, and positive CTAs
 - **Foreground/Background Pairings**:
-  - Background (White #FFFFFF): Dark Gray text (oklch(0.25 0 0)) - Ratio 13.1:1 ✓
-  - Card (Light Gray oklch(0.98 0 0)): Dark text (oklch(0.25 0 0)) - Ratio 12.8:1 ✓
-  - Primary (Blue oklch(0.45 0.15 250)): White text (oklch(1 0 0)) - Ratio 7.2:1 ✓
-  - Secondary (Gray oklch(0.95 0 0)): Dark text (oklch(0.3 0 0)) - Ratio 10.5:1 ✓
-  - Accent (Green oklch(0.65 0.18 145)): White text (oklch(1 0 0)) - Ratio 4.9:1 ✓
+  - Background (White oklch(0.99 0 0)): Dark Gray text (oklch(0.15 0 0)) - Ratio 15.8:1 ✓
+  - Card (White oklch(1 0 0)): Dark text (oklch(0.15 0 0)) - Ratio 16.3:1 ✓
+  - Primary (Henkel Red oklch(0.45 0.20 25)): White text (oklch(1 0 0)) - Ratio 6.8:1 ✓
+  - Secondary (Gray oklch(0.96 0 0)): Dark text (oklch(0.2 0 0)) - Ratio 11.2:1 ✓
+  - Accent (Green oklch(0.50 0.20 160)): White text (oklch(1 0 0)) - Ratio 5.2:1 ✓
   - Destructive (Red oklch(0.55 0.22 25)): White text (oklch(1 0 0)) - Ratio 5.1:1 ✓
 
 ## Font Selection

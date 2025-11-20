@@ -13,6 +13,7 @@ import { HistoryDetailView } from '@/components/HistoryDetailView';
 import { Dashboard } from '@/components/Dashboard';
 import { validateProductLabel } from '@/lib/validationService';
 import { type ValidationResult } from '@/lib/sealData';
+import henkelLogo from '@/assets/images/henkel-logo.jpg';
 
 function App() {
   const [showLanding, setShowLanding] = useState(true);
@@ -79,13 +80,17 @@ function App() {
           <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
             <div className="container mx-auto px-6 lg:px-12 py-5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-primary p-2.5">
-                    <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
-                  </div>
-                  <div>
-                    <h1 className="text-xl font-bold tracking-tight">Henkel Validator</h1>
-                    <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+                <div className="flex items-center gap-4">
+                  <img src={henkelLogo} alt="Henkel" className="h-10 w-auto object-contain" />
+                  <div className="h-8 w-px bg-border" />
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-xl bg-primary p-2.5">
+                      <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold tracking-tight">Validator</h1>
+                      <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -130,13 +135,17 @@ function App() {
         <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
           <div className="container mx-auto px-6 lg:px-12 py-5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-primary p-2.5">
-                  <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold tracking-tight">Henkel Validator</h1>
-                  <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+              <div className="flex items-center gap-4">
+                <img src={henkelLogo} alt="Henkel" className="h-10 w-auto object-contain" />
+                <div className="h-8 w-px bg-border" />
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl bg-primary p-2.5">
+                    <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold tracking-tight">Validator</h1>
+                    <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -175,13 +184,17 @@ function App() {
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 lg:px-12 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-primary p-2.5">
-                <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold tracking-tight">Henkel Validator</h1>
-                <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+            <div className="flex items-center gap-4">
+              <img src={henkelLogo} alt="Henkel" className="h-10 w-auto object-contain" />
+              <div className="h-8 w-px bg-border" />
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-primary p-2.5">
+                  <ShieldCheck size={24} weight="bold" className="text-primary-foreground" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold tracking-tight">Validator</h1>
+                  <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">

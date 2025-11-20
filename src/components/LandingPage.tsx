@@ -1,6 +1,7 @@
 import { ShieldCheck, Lightning, CheckCircle, ArrowRight, Books, Sparkle, Seal } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import henkelLogo from '@/assets/images/henkel-logo.jpg';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -12,13 +13,17 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       <header className="border-b bg-card sticky top-0 z-50 backdrop-blur-md bg-card/80">
         <div className="container mx-auto px-6 lg:px-12 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 bg-primary rounded-xl">
-                <ShieldCheck size={24} weight="fill" className="text-primary-foreground" />
+            <div className="flex items-center gap-4">
+              <img src={henkelLogo} alt="Henkel" className="h-10 w-auto object-contain" />
+              <div className="h-8 w-px bg-border" />
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-primary rounded-xl">
+                  <ShieldCheck size={24} weight="fill" className="text-primary-foreground" />
+                </div>
+                <span className="text-lg font-semibold tracking-tight">
+                  Validator
+                </span>
               </div>
-              <span className="text-lg font-semibold tracking-tight">
-                Henkel Validator
-              </span>
             </div>
             <Button onClick={onGetStarted} size="sm" className="rounded-full px-5 font-medium">
               Get started
@@ -188,11 +193,15 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       <footer className="border-t bg-muted/20 py-12">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2.5">
-              <div className="p-1.5 bg-primary/10 rounded-lg">
-                <ShieldCheck size={18} weight="duotone" className="text-primary" />
+            <div className="flex items-center gap-4">
+              <img src={henkelLogo} alt="Henkel" className="h-8 w-auto object-contain" />
+              <div className="h-6 w-px bg-border" />
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 bg-primary/10 rounded-lg">
+                  <ShieldCheck size={18} weight="duotone" className="text-primary" />
+                </div>
+                <span className="font-medium">Regulatory Compliance Validator</span>
               </div>
-              <span className="font-medium">Henkel Regulatory Compliance Validator</span>
             </div>
             <div className="font-light">
               Powered by GPT-4o Vision AI
