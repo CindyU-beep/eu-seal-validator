@@ -1,3 +1,5 @@
+'use client';
+
 import { CheckCircle, WarningCircle, XCircle, ClockCounterClockwise, Trash } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

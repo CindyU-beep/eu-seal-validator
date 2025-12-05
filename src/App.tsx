@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useKV } from '@github/spark/hooks';
+import { useState, useEffect } from 'react';
 import { ShieldCheck, Books, ClockCounterClockwise, ChartBar } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -21,10 +20,18 @@ function App() {
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [currentResult, setCurrentResult] = useState<ValidationResult | null>(null);
-  const [validationHistory, setValidationHistory] = useKV<ValidationResult[]>('validation-history', []);
+  const [validationHistory, setValidationHistory] = useState<ValidationResult[]>(() => {
+    const saved = localStorage.getItem('validation-history');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [showHistoryDetail, setShowHistoryDetail] = useState(false);
   const [selectedHistoryResult, setSelectedHistoryResult] = useState<ValidationResult | null>(null);
   const [showDashboard, setShowDashboard] = useState(false);
+
+  // Persist validation history to localStorage
+  useEffect(() => {
+    localStorage.setItem('validation-history', JSON.stringify(validationHistory));
+  }, [validationHistory]);
 
   const handleImageSelect = (imageBase64: string, file: File) => {
     setUploadedImage(imageBase64);
@@ -45,7 +52,7 @@ function App() {
     try {
       const result = await validateProductLabel(uploadedImage, currentFile.name);
       setCurrentResult(result);
-      setValidationHistory((currentHistory) => [result, ...(currentHistory || [])]);
+      setValidationHistory((currentHistory) => [result, ...currentHistory]);
     } catch (error) {
       console.error('Validation error:', error);
     } finally {
@@ -173,7 +180,7 @@ function App() {
 
         <main className="container mx-auto px-6 lg:px-12 py-8">
           <Dashboard 
-            history={validationHistory || []} 
+            history={validationHistory} 
             onSelectResult={handleSelectHistoryItem}
           />
         </main>
@@ -324,7 +331,7 @@ function App() {
             ) : (
               <div className="max-w-3xl mx-auto">
                 <ValidationHistory
-                  history={validationHistory || []}
+                  history={validationHistory}
                   onSelect={handleSelectHistoryItem}
                   onClear={handleClearHistory}
                 />
