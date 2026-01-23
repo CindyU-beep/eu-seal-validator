@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { CheckCircle, WarningCircle, XCircle, Eye, ImagesSquare } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
