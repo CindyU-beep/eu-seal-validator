@@ -1,7 +1,8 @@
+'use client';
+
 import { ShieldCheck, Lightning, CheckCircle, ArrowRight, Books, Sparkle, Seal } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import henkelLogo from '@/assets/images/henkel-logo.jpg';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -15,7 +16,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="container mx-auto px-6 lg:px-12 py-5 relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src={henkelLogo} alt="Henkel" className="h-12 w-auto object-contain" />
+            <img src="/henkel-logo.jpg" alt="Henkel" className="h-14 w-auto object-contain" />
               <div className="h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
               <div className="flex items-center gap-2.5">
                 <div className="p-2 henkel-gradient rounded-xl shadow-sm">
