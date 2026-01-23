@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useState } from 'react';
 import { UploadSimple, Image as ImageIcon, X } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
