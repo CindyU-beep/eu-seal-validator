@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle, WarningCircle, XCircle, Eye, ImagesSquare } from '@phosphor-icons/react';
+import { CheckCircle, WarningCircle, XCircle, Eye, ImagesSquare, UserCheck } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { type ValidationResult } from '@/lib/sealData';
 import { getStatusColor, getConfidenceLabel, getConfidenceColor } from '@/lib/imageUtils';
+import { HumanReviewDialog } from '@/components/HumanReviewDialog';
 
 interface ValidationResultsProps {
   result: ValidationResult;
@@ -20,8 +21,17 @@ export function ValidationResults({ result }: ValidationResultsProps) {
   const StatusIcon = result.status === 'pass' ? CheckCircle : result.status === 'warning' ? WarningCircle : XCircle;
   const [showAnnotated, setShowAnnotated] = useState(true);
   const [showAnnotatedInDialog, setShowAnnotatedInDialog] = useState(true);
+  const [showHumanReview, setShowHumanReview] = useState(false);
+
+  const needsHumanReview = result.status === 'fail' || result.overallConfidence < 70;
   
   return (
+    <>
+      <HumanReviewDialog 
+        open={showHumanReview}
+        onClose={() => setShowHumanReview(false)}
+        result={result}
+      />
     <div className="space-y-6">
       {result.annotatedImageUrl && (
         <Card className="p-8 border-0 shadow-lg relative overflow-hidden">
@@ -130,6 +140,28 @@ export function ValidationResults({ result }: ValidationResultsProps) {
             </div>
 
             <p className="text-sm text-muted-foreground font-mono">{result.fileName}</p>
+
+            {needsHumanReview && (
+              <Alert className="border-warning/30 bg-warning/5">
+                <WarningCircle size={18} weight="fill" className="text-warning" />
+                <AlertDescription className="text-sm">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <strong>Low confidence detected.</strong> Human review recommended to improve future accuracy.
+                    </div>
+                    <Button 
+                      onClick={() => setShowHumanReview(true)}
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 border-warning/30 hover:bg-warning/10 hover:border-warning flex-shrink-0"
+                    >
+                      <UserCheck size={16} weight="duotone" />
+                      Review
+                    </Button>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
         </div>
       </Card>
@@ -189,6 +221,7 @@ export function ValidationResults({ result }: ValidationResultsProps) {
         </Alert>
       )}
     </div>
+    </>
   );
 }
 

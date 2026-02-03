@@ -54,13 +54,29 @@ An AI-powered automated system to validate product label images against EU (CLP/
 - **Progression**: User clicks dashboard → Statistics calculated from history → Visual metrics displayed → User gains insights into validation patterns
 - **Success criteria**: Real-time analytics showing total validations, pass rates, average confidence, top detected seals, and recent activity with visual charts and progress indicators
 
+### Human-in-the-Loop Review System
+- **Functionality**: When validation fails with low confidence (<70%), system prompts human expert to manually review and identify correct seals
+- **Purpose**: Captures expert corrections to create training data for ML model improvement and retraining
+- **Trigger**: Validation completes with fail status or confidence below 70%
+- **Progression**: Low confidence validation completes → "Review" button appears in results → Human reviewer clicks review → Dialog shows original image with all possible seals → Reviewer selects correct seals → Adds confidence level and notes → Submits feedback → Data stored for ML retraining
+- **Success criteria**: Human feedback captured with original image, AI predictions, corrected labels, reviewer confidence, and notes; data exportable as JSON for model retraining
+
+### ML Training Data Management
+- **Functionality**: Centralized interface for viewing, exporting, and managing human review feedback collected for ML retraining
+- **Purpose**: Enables data scientists and ML engineers to access quality training data for model improvement
+- **Trigger**: User navigates to "Training" section in top navigation
+- **Progression**: User clicks Training → Dashboard shows statistics (total reviews, high confidence count, avg seals per review) → List of all feedback entries with details → Export button downloads JSON training dataset → Clear option removes all data
+- **Success criteria**: All human reviews accessible, exportable as structured JSON with image data, AI predictions, and human corrections; analytics showing data quality metrics
+
 ## Edge Case Handling
 - **No seals detected**: Display clear message indicating no regulatory seals found, suggest image quality check
-- **Low confidence scores**: Flag results with confidence below 80% as "Needs Manual Review"
+- **Low confidence scores**: Flag results with confidence below 80% as "Needs Manual Review", trigger human-in-the-loop review workflow for confidence below 70%
 - **Invalid image format**: Validate file type on upload, show error for unsupported formats
 - **Oversized images**: Resize/compress large images automatically while preserving detail
 - **Network failures during validation**: Show retry option with clear error messaging
 - **Empty reference library**: Graceful handling if regulatory seals not yet loaded
+- **Human review abandonment**: Allow closing review dialog without submitting, no data saved if user cancels
+- **Conflicting human vs AI labels**: Store both sets for comparison analysis in training data export
 
 ## Design Direction
 The interface should evoke trust, precision, and corporate professionalism—reflecting Henkel's enterprise standards and brand identity. Design should feel authoritative and serious, with a clean minimal interface that keeps focus on the validation task. The aesthetic should lean toward technical precision rather than playful, using Henkel's signature red as the primary brand color, combined with clear visual hierarchy to guide compliance officers through the validation workflow.
@@ -135,6 +151,9 @@ Subtle and purposeful animations that reinforce validation states and guide atte
   - Reference: Books or Certificate
   - Download: DownloadSimple
   - Image: Image or FileImage
+  - Dashboard: ChartBar
+  - Human Review: UserCheck
+  - ML Training: Brain
 
 - **Spacing**:
   - Page margins: px-8 py-6

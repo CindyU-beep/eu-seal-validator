@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKV } from '@github/spark/hooks';
-import { ShieldCheck, Books, ClockCounterClockwise, ChartBar } from '@phosphor-icons/react';
+import { ShieldCheck, Books, ClockCounterClockwise, ChartBar, Brain } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,6 +11,7 @@ import { ReferenceSealGallery } from '@/components/ReferenceSealGallery';
 import { ValidationHistory } from '@/components/ValidationHistory';
 import { HistoryDetailView } from '@/components/HistoryDetailView';
 import { Dashboard } from '@/components/Dashboard';
+import { TrainingDataManagement } from '@/components/TrainingDataManagement';
 import { validateProductLabel } from '@/lib/validationService';
 import { type ValidationResult } from '@/lib/sealData';
 import henkelLogo from '@/assets/images/henkel-logo.jpg';
@@ -25,6 +26,7 @@ function App() {
   const [showHistoryDetail, setShowHistoryDetail] = useState(false);
   const [selectedHistoryResult, setSelectedHistoryResult] = useState<ValidationResult | null>(null);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [showTraining, setShowTraining] = useState(false);
 
   const handleImageSelect = (imageBase64: string, file: File) => {
     setUploadedImage(imageBase64);
@@ -71,6 +73,68 @@ function App() {
 
   if (showLanding) {
     return <LandingPage onGetStarted={() => setShowLanding(false)} />;
+  }
+
+  if (showTraining) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] to-transparent pointer-events-none" />
+          <div className="container mx-auto px-6 lg:px-12 py-5 relative">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <img src={henkelLogo} alt="Henkel" className="h-12 w-auto object-contain" />
+                <div className="h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl henkel-gradient p-2.5 shadow-sm">
+                    <ShieldCheck size={24} weight="bold" className="text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold tracking-tight">Validator</h1>
+                    <p className="text-sm text-muted-foreground">EU Regulatory Compliance</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setShowTraining(false);
+                    setShowDashboard(false);
+                  }}
+                  className="rounded-full gap-2 hover:bg-primary/5"
+                >
+                  <ShieldCheck size={18} weight="duotone" />
+                  Validator
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setShowTraining(false);
+                    setShowDashboard(true);
+                  }}
+                  className="rounded-full gap-2 hover:bg-primary/5"
+                >
+                  <ChartBar size={18} weight="duotone" />
+                  Dashboard
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowLanding(true)}
+                  className="rounded-full hover:bg-primary/5"
+                >
+                  Home
+                </Button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="container mx-auto px-6 lg:px-12 py-8">
+          <TrainingDataManagement />
+        </main>
+      </div>
+    );
   }
 
   if (showDashboard) {
@@ -161,6 +225,17 @@ function App() {
                 </Button>
                 <Button
                   variant="ghost"
+                  onClick={() => {
+                    setShowDashboard(false);
+                    setShowTraining(true);
+                  }}
+                  className="rounded-full gap-2 hover:bg-primary/5"
+                >
+                  <Brain size={18} weight="duotone" />
+                  Training
+                </Button>
+                <Button
+                  variant="ghost"
                   onClick={() => setShowLanding(true)}
                   className="rounded-full hover:bg-primary/5"
                 >
@@ -208,6 +283,14 @@ function App() {
               >
                 <ChartBar size={18} weight="duotone" />
                 Dashboard
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setShowTraining(true)}
+                className="rounded-full gap-2 hover:bg-primary/5"
+              >
+                <Brain size={18} weight="duotone" />
+                Training
               </Button>
               <Button
                 variant="ghost"
