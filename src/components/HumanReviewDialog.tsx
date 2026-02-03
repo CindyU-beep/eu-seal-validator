@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKV } from '@github/spark/hooks';
-import { UserCheck, ArrowRight, CheckCircle } from '@phosphor-icons/react';
+import { UserCheck, ArrowRight, CheckCircle, Shield } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
@@ -116,6 +116,9 @@ export function HumanReviewDialog({
               `}
             >
               <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-16 h-16 bg-muted/30 rounded-lg flex items-center justify-center border border-border/50">
+                  <Shield size={32} weight="duotone" className="text-primary" />
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <p className="font-semibold text-sm">{seal.name}</p>
