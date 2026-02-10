@@ -4,6 +4,7 @@ export interface RegulatorySeal {
   name: string;
   description: string;
   category: 'physical' | 'health' | 'environmental';
+  imageUrl?: string;
 }
 
 export interface ValidationResult {
@@ -39,63 +40,72 @@ export const REGULATORY_SEALS: RegulatorySeal[] = [
     code: 'GHS01',
     name: 'Explosive',
     description: 'Explosive substances and articles',
-    category: 'physical'
+    category: 'physical',
+    imageUrl: '/src/assets/seals-compressed/explosive.png'
   },
   {
     id: 'ghs02',
     code: 'GHS02',
     name: 'Flammable',
     description: 'Flammable gases, aerosols, liquids, and solids',
-    category: 'physical'
+    category: 'physical',
+    imageUrl: '/src/assets/seals-compressed/flammable.png'
   },
   {
     id: 'ghs03',
     code: 'GHS03',
     name: 'Oxidizing',
     description: 'Oxidizing gases, liquids, and solids',
-    category: 'physical'
+    category: 'physical',
+    imageUrl: '/src/assets/seals-compressed/oxidising.png'
   },
   {
     id: 'ghs04',
     code: 'GHS04',
     name: 'Compressed Gas',
     description: 'Gases under pressure',
-    category: 'physical'
+    category: 'physical',
+    imageUrl: '/src/assets/seals-compressed/gas-under-pressure.png'
   },
   {
     id: 'ghs05',
     code: 'GHS05',
     name: 'Corrosive',
     description: 'Corrosive to metals and skin corrosion',
-    category: 'physical'
+    category: 'physical',
+    imageUrl: '/src/assets/seals-compressed/corrosive.png'
   },
   {
     id: 'ghs06',
     code: 'GHS06',
     name: 'Toxic',
     description: 'Acute toxicity (fatal or toxic)',
-    category: 'health'
+    category: 'health',
+    imageUrl: '/src/assets/seals-compressed/acute-toxicity.png'
   },
   {
     id: 'ghs07',
     code: 'GHS07',
     name: 'Harmful/Irritant',
     description: 'Harmful if swallowed, skin irritation, eye irritation',
-    category: 'health'
+    category: 'health',
+    imageUrl: '/src/assets/seals-compressed/serious-health-hazard.png'
   },
   {
     id: 'ghs08',
     code: 'GHS08',
     name: 'Health Hazard',
     description: 'Respiratory sensitization, carcinogenicity, reproductive toxicity',
-    category: 'health'
+    category: 'health',
+    imageUrl: '/src/assets/seals-compressed/health-hazard.png'
   },
   {
     id: 'ghs09',
     code: 'GHS09',
     name: 'Environmental Hazard',
     description: 'Hazardous to the aquatic environment',
-    category: 'environmental'
+    category: 'environmental',
+    imageUrl: '/src/assets/seals-compressed/hazardous-to-environment.png'
   },
   {
     id: 'eu-warn',

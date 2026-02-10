@@ -1,7 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { REGULATORY_SEALS, type RegulatorySeal } from '@/lib/sealData';
-import { Shield } from '@phosphor-icons/react';
 
 export function ReferenceSealGallery() {
   const getCategoryColor = (category: RegulatorySeal['category']) => {
@@ -32,8 +31,16 @@ export function ReferenceSealGallery() {
         {REGULATORY_SEALS.map((seal) => (
           <Card key={seal.id} className="p-6 hover:shadow-xl transition-all duration-300 border-0 shadow-sm">
             <div className="space-y-4">
-              <div className="aspect-square bg-muted/30 rounded-2xl flex items-center justify-center border border-border/50">
-                <Shield size={72} weight="duotone" className="text-primary" />
+              <div className="aspect-square bg-muted/30 rounded-2xl flex items-center justify-center border border-border/50 p-4">
+                {seal.imageUrl ? (
+                  <img 
+                    src={seal.imageUrl} 
+                    alt={seal.name}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <div className="text-4xl font-bold text-primary">{seal.code}</div>
+                )}
               </div>
               
               <div className="space-y-3">

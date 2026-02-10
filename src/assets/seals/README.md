@@ -13,13 +13,12 @@ Replace the placeholder files with actual EU CLP/GHS regulatory seal images:
 
 ## Common EU CLP/GHS Pictograms
 
-1. Explosive (GHS01)
-2. Flammable (GHS02)
-3. Oxidizing (GHS03)
-4. Compressed Gas (GHS04)
-5. Corrosive (GHS05)
-6. Toxic (GHS06)
-7. Harmful/Irritant (GHS07)
-8. Health Hazard (GHS08)
-9. Environmental Hazard (GHS09)
-10-15. Additional regulatory or warning symbols as per EU requirements
+1. **Explosive** (`GHS-explosive`)
+2. **Flammable** (`GHS-flammable`)
+3. **Oxidising** (`GHS-oxidising`)
+4. **Gas Under Pressure** (`GHS-gas-under-pressure`)
+5. **Corrosive** (`GHS-corrosive`)
+6. **Acute Toxicity** (`GHS-acute-toxicity`)
+7. **Health Hazard** (`GHS-health-hazard`)
+8. **Serious Health Hazard** (`GHS-serious-health-hazard`)
+9. **Hazardous to the Environment** (`GHS-hazardous-to-environment`)
