@@ -23,7 +23,13 @@ export function ValidationResults({ result }: ValidationResultsProps) {
   const [showAnnotatedInDialog, setShowAnnotatedInDialog] = useState(true);
   const [showHumanReview, setShowHumanReview] = useState(false);
 
-  const needsHumanReview = result.status === 'fail' || result.overallConfidence < 70;
+  const needsHumanReview = result.status === 'fail' || result.overallConfidence < 85 || result.requiresHumanReview;
+  const highConfidence = result.overallConfidence >= 85 && result.status === 'pass' && !result.requiresHumanReview;
+  const failedSeals = result.detectedSeals
+    .filter(s => s.localizationFailed)
+    .map(s => s.sealId);
+
+
   
   return (
     <>
@@ -31,6 +37,8 @@ export function ValidationResults({ result }: ValidationResultsProps) {
         open={showHumanReview}
         onClose={() => setShowHumanReview(false)}
         result={result}
+        isLowConfidence={needsHumanReview}
+        failedSeals={failedSeals}
       />
     <div className="space-y-6">
       {result.annotatedImageUrl && (
@@ -141,13 +149,17 @@ export function ValidationResults({ result }: ValidationResultsProps) {
 
             <p className="text-sm text-muted-foreground font-mono">{result.fileName}</p>
 
-            {needsHumanReview && (
+            {needsHumanReview ? (
               <Alert className="border-warning/30 bg-warning/5">
                 <WarningCircle size={18} weight="fill" className="text-warning" />
                 <AlertDescription className="text-sm">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <strong>Low confidence detected.</strong> Human review recommended to improve future accuracy.
+                      {result.requiresHumanReview && failedSeals.length > 0 ? (
+                        <><strong>Some seals could not be precisely located.</strong> Please draw bounding boxes for {failedSeals.length} unlocalized seal{failedSeals.length !== 1 ? 's' : ''}.  </>
+                      ) : (
+                        <><strong>Low confidence detected.</strong> Human review recommended to improve future accuracy.</>
+                      )}
                     </div>
                     <Button 
                       onClick={() => setShowHumanReview(true)}
@@ -157,6 +169,26 @@ export function ValidationResults({ result }: ValidationResultsProps) {
                     >
                       <UserCheck size={16} weight="duotone" />
                       Review
+                    </Button>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            ) : highConfidence && (
+              <Alert className="border-accent/20 bg-accent/5">
+                <CheckCircle size={18} weight="fill" className="text-accent" />
+                <AlertDescription className="text-sm">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <strong>High confidence result.</strong> Optional: Help train the AI by confirming the detected seals.
+                    </div>
+                    <Button 
+                      onClick={() => setShowHumanReview(true)}
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 border-accent/30 hover:bg-accent/10 hover:border-accent flex-shrink-0"
+                    >
+                      <UserCheck size={16} weight="duotone" />
+                      Confirm
                     </Button>
                   </div>
                 </AlertDescription>
@@ -186,7 +218,7 @@ export function ValidationResults({ result }: ValidationResultsProps) {
               <div key={index}>
                 <div className="flex items-center justify-between py-3">
                   <div className="flex items-center gap-3">
-                    <CheckCircle size={22} weight="fill" className="text-accent" />
+                    <CheckCircle size={22} weight="fill" className={seal.localizationFailed ? 'text-warning' : 'text-accent'} />
                     <span className="font-medium">{seal.sealName}</span>
                   </div>
                   <div className="flex items-center gap-4">

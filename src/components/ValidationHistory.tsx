@@ -1,17 +1,92 @@
-import { CheckCircle, WarningCircle, XCircle, ClockCounterClockwise, Trash } from '@phosphor-icons/react';
+import { CheckCircle, WarningCircle, XCircle, ClockCounterClockwise, Trash, Download, Upload } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { type ValidationResult } from '@/lib/sealData';
 import { formatTimestamp, getStatusColor } from '@/lib/imageUtils';
+import { toast } from 'sonner';
+import { useRef } from 'react';
 
 interface ValidationHistoryProps {
   history: ValidationResult[];
   onSelect: (result: ValidationResult) => void;
   onClear: () => void;
+  onImport?: (history: ValidationResult[]) => void;
 }
 
-export function ValidationHistory({ history, onSelect, onClear }: ValidationHistoryProps) {
+export function ValidationHistory({ history, onSelect, onClear, onImport }: ValidationHistoryProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleExport = () => {
+    if (history.length === 0) {
+      toast.error('No validation history to export');
+      return;
+    }
+
+    try {
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        version: '1.0',
+        totalValidations: history.length,
+        validations: history
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `validation-history-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success('History exported successfully', {
+        description: `Exported ${history.length} validation${history.length !== 1 ? 's' : ''}`
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast.error('Failed to export history');
+    }
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importData = JSON.parse(content);
+        
+        if (!importData.validations || !Array.isArray(importData.validations)) {
+          throw new Error('Invalid file format');
+        }
+
+        if (onImport) {
+          onImport(importData.validations);
+          toast.success('History imported successfully', {
+            description: `Imported ${importData.validations.length} validation${importData.validations.length !== 1 ? 's' : ''}`
+          });
+        }
+      } catch (error) {
+        console.error('Import error:', error);
+        toast.error('Failed to import history', {
+          description: 'Please ensure the file is a valid validation history export'
+        });
+      }
+    };
+    reader.readAsText(file);
+    
+    // Reset input
+    event.target.value = '';
+  };
+
   if (history.length === 0) {
     return (
       <Card className="p-16 border-0 shadow-sm bg-muted/20">
@@ -43,22 +118,53 @@ export function ValidationHistory({ history, onSelect, onClear }: ValidationHist
 
   return (
     <div className="space-y-6">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        onChange={handleImport}
+        className="hidden"
+      />
+      
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold tracking-tight">Validation history</h2>
           <p className="text-muted-foreground text-sm">
-            {history.length} validation{history.length !== 1 ? 's' : ''} performed
+            {history.length} validation{history.length !== 1 ? 's' : ''} performed • Saved locally
           </p>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={onClear} 
-          className="rounded-full gap-2 border-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground"
-        >
-          <Trash size={16} weight="bold" />
-          Clear history
-        </Button>
+        <div className="flex gap-2">
+          {onImport && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleImportClick}
+              className="rounded-full gap-2"
+            >
+              <Upload size={16} weight="bold" />
+              Import
+            </Button>
+          )}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleExport}
+            disabled={history.length === 0}
+            className="rounded-full gap-2"
+          >
+            <Download size={16} weight="bold" />
+            Export
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={onClear} 
+            className="rounded-full gap-2 border-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+          >
+            <Trash size={16} weight="bold" />
+            Clear
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-3">

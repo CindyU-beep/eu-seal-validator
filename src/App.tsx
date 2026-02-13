@@ -14,6 +14,7 @@ import { Dashboard } from '@/components/Dashboard';
 import { TrainingDataManagement } from '@/components/TrainingDataManagement';
 import { validateProductLabel } from '@/lib/validationService';
 import { type ValidationResult } from '@/lib/sealData';
+import { toast } from 'sonner';
 import henkelLogo from '@/assets/images/henkel-logo.jpg';
 
 function App() {
@@ -48,6 +49,13 @@ function App() {
       const result = await validateProductLabel(uploadedImage, currentFile.name);
       setCurrentResult(result);
       setValidationHistory((currentHistory) => [result, ...(currentHistory || [])]);
+      
+      // Show auto-save confirmation
+      setTimeout(() => {
+        toast.success('Validation saved', {
+          description: 'Results saved to local storage'
+        });
+      }, 500);
     } catch (error) {
       console.error('Validation error:', error);
     } finally {
@@ -69,6 +77,15 @@ function App() {
     setValidationHistory([]);
     setShowHistoryDetail(false);
     setSelectedHistoryResult(null);
+  };
+
+  const handleImportHistory = (importedHistory: ValidationResult[]) => {
+    setValidationHistory((currentHistory) => {
+      // Merge imported history with current, avoiding duplicates by ID
+      const currentIds = new Set((currentHistory || []).map(r => r.id));
+      const newResults = importedHistory.filter(r => !currentIds.has(r.id));
+      return [...(currentHistory || []), ...newResults];
+    });
   };
 
   if (showLanding) {
@@ -410,6 +427,7 @@ function App() {
                   history={validationHistory || []}
                   onSelect={handleSelectHistoryItem}
                   onClear={handleClearHistory}
+                  onImport={handleImportHistory}
                 />
               </div>
             )}

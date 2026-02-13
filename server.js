@@ -3,6 +3,7 @@ import cors from 'cors';
 import { AzureOpenAI } from 'openai';
 import { DefaultAzureCredential } from '@azure/identity';
 import dotenv from 'dotenv';
+import { locateSeals, preloadTemplates } from './sealLocator.js';
 
 dotenv.config();
 
@@ -94,6 +95,35 @@ app.post('/api/validate', async (req, res) => {
   }
 });
 
+// ── CV-based seal localization endpoint ─────────────────────────────────────
+app.post('/api/locate-seals', async (req, res) => {
+  try {
+    const { imageBase64, detectedSealIds } = req.body;
+
+    if (!imageBase64 || !detectedSealIds || !Array.isArray(detectedSealIds)) {
+      return res.status(400).json({
+        error: 'imageBase64 (string) and detectedSealIds (string[]) are required',
+      });
+    }
+
+    console.log(`🔍 Locating ${detectedSealIds.length} seals via template matching…`);
+    console.log(`   Seal IDs requested: ${detectedSealIds.join(', ')}`);
+    console.log(`   Image base64 length: ${imageBase64.length} chars`);
+    const results = await locateSeals(imageBase64, detectedSealIds);
+
+    const localized = results.filter(r => r.localized).length;
+    console.log(`✅ Localized ${localized}/${detectedSealIds.length} seals`);
+    console.log(`   Results:`, JSON.stringify(results.map(r => ({ id: r.sealId, ok: r.localized, score: r.matchScore }))));
+
+    res.json({ results });
+  } catch (error) {
+    console.error('Seal localization error:', error);
+    res.status(500).json({
+      error: error.message || 'Failed to locate seals',
+    });
+  }
+});
+
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'ok', 
@@ -103,10 +133,21 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`🚀 Validation API server running on http://localhost:${port}`);
-  console.log(`📍 Using Azure OpenAI endpoint: ${endpoint}`);
-  console.log(`🤖 Deployment: ${deployment}`);
-  console.log(`🔑 Authentication: Azure AD (RBAC)`);
-  console.log(`💡 Test the server: http://localhost:${port}/health`);
-});
+// Pre-load seal templates, then start server
+preloadTemplates()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`🚀 Validation API server running on http://localhost:${port}`);
+      console.log(`📍 Using Azure OpenAI endpoint: ${endpoint}`);
+      console.log(`🤖 Deployment: ${deployment}`);
+      console.log(`🔑 Authentication: Azure AD (RBAC)`);
+      console.log(`💡 Test the server: http://localhost:${port}/health`);
+    });
+  })
+  .catch((err) => {
+    console.error('⚠️  Failed to pre-load seal templates:', err.message);
+    console.log('📌 Server starting anyway — template matching may be slower on first request');
+    app.listen(port, () => {
+      console.log(`🚀 Validation API server running on http://localhost:${port}`);
+    });
+  });

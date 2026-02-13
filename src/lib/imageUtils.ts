@@ -70,6 +70,7 @@ interface AnnotationData {
   sealName: string;
   confidence: number;
   boundingBox: BoundingBox;
+  localizationSource?: 'cv' | 'model' | 'human';
 }
 
 export async function drawBoundingBoxes(
@@ -93,13 +94,28 @@ export async function drawBoundingBoxes(
       
       ctx.drawImage(img, 0, 0);
       
-      annotations.forEach(({ sealName, confidence, boundingBox }) => {
-        const x = boundingBox.x * img.width;
-        const y = boundingBox.y * img.height;
-        const width = boundingBox.width * img.width;
-        const height = boundingBox.height * img.height;
+      annotations.forEach(({ sealName, confidence, boundingBox, localizationSource }) => {
+        // Clamp normalised coordinates to [0, 1] and ensure box fits within image
+        const nx = Math.max(0, Math.min(1, boundingBox.x));
+        const ny = Math.max(0, Math.min(1, boundingBox.y));
+        const nw = Math.max(0, Math.min(1 - nx, boundingBox.width));
+        const nh = Math.max(0, Math.min(1 - ny, boundingBox.height));
+
+        // Skip degenerate bounding boxes
+        if (nw < 0.01 || nh < 0.01) return;
+
+        const x = nx * img.width;
+        const y = ny * img.height;
+        const width = nw * img.width;
+        const height = nh * img.height;
         
-        ctx.strokeStyle = '#ef4444';
+        // Color-code by localization source: green=CV, yellow=model, blue=human, red=unknown
+        const sourceColors: Record<string, string> = {
+          cv: '#22c55e',
+          model: '#eab308',
+          human: '#3b82f6',
+        };
+        ctx.strokeStyle = sourceColors[localizationSource || ''] || '#ef4444';
         ctx.lineWidth = 4;
         ctx.strokeRect(x, y, width, height);
         
@@ -113,7 +129,8 @@ export async function drawBoundingBoxes(
         
         const labelY = y > textHeight + padding * 2 ? y - padding : y + height + textHeight + padding;
         
-        ctx.fillStyle = '#ef4444';
+        const labelBg = sourceColors[localizationSource || ''] || '#ef4444';
+        ctx.fillStyle = labelBg;
         ctx.fillRect(x, labelY - textHeight - padding, textWidth + padding * 2, textHeight + padding * 2);
         
         ctx.fillStyle = '#ffffff';

@@ -2,6 +2,27 @@ import { REGULATORY_SEALS, type ValidationResult, type DetectedSeal } from './se
 import { drawBoundingBoxes } from './imageUtils';
 import { callAzureOpenAI } from './azureOpenAI';
 
+/**
+ * Call the server-side CV template-matching endpoint to get bounding boxes.
+ */
+async function locateSealsViaCV(
+  imageBase64: string,
+  detectedSealIds: string[]
+): Promise<Array<{ sealId: string; localized: boolean; boundingBox: { x: number; y: number; width: number; height: number } | null; matchScore: number }>> {
+  const backendUrl = (import.meta as any).env?.VITE_BACKEND_URL || 'http://localhost:3001';
+  const res = await fetch(`${backendUrl}/api/locate-seals`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ imageBase64, detectedSealIds }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Seal localization request failed');
+  }
+  const data = await res.json();
+  return data.results;
+}
+
 export async function validateProductLabel(
   imageBase64: string,
   fileName: string
@@ -10,67 +31,54 @@ export async function validateProductLabel(
     (seal) => `${seal.code} - ${seal.name}: ${seal.description}`
   ).join('\n');
 
-  const promptText = `You are an expert EU regulatory compliance validator specializing in CLP/GHS hazard pictograms and product labeling.
+  // ── Stage 1: LLM Classification (no bounding boxes) ──────────────────
+  const promptText = `You are an expert EU regulatory compliance validator specialising in CLP/GHS hazard pictograms and product labelling.
 
-Your job is to scan product packaging for specific CLP/GHS Hazard Pictograms. Analyze the uploaded product label image and identify which EU regulatory hazard pictograms (seals) are present.
+Analyse the uploaded product label image and identify which EU regulatory hazard pictograms (seals) are present.
 
-Here are the 9 reference EU regulatory seals to check for:
+Reference EU regulatory seals:
 ${sealsList}
 
 Your task:
-1. First, describe what product you observe in the image (e.g., "This appears to be a laundry detergent bottle...", "This is a cleaning spray container...", etc.)
-2. Carefully examine the image for any GHS pictograms (diamond-shaped hazard symbols with red borders and white background)
-3. Identify each pictogram present in the image
-Specifically check for these GHS classes:
-                - GHS01 Explosive (Exploding Bomb)
-                - GHS02 Flammable (Flame)
-                - GHS03 Oxidising (Flame over circle)
-                - GHS04 Gas Under Pressure (Gas cylinder)
-                - GHS05 Corrosive (Two test tubes pouring liquid onto a hand and a metal bar)
-                - GHS06 Acute Toxicity (Skull and crossbones)
-                - GHS07 Health Hazard (Exclamation mark)
-                - GHS08 Serious Health Hazard (black human silhouette with star-shaped explosion in chest)
-                - GHS09 Hazardous to Environment (Dead tree & fish)
+1. Describe the product you observe in the image
+2. Carefully examine the image for GHS pictograms (diamond-shaped hazard symbols with red borders and white background)
+3. Identify each pictogram present — check for:
+   - GHS01 Explosive (Exploding Bomb)
+   - GHS02 Flammable (Flame)
+   - GHS03 Oxidising (Flame over circle)
+   - GHS04 Gas Under Pressure (Gas cylinder)
+   - GHS05 Corrosive (Two test tubes pouring onto hand & metal bar)
+   - GHS06 Acute Toxicity (Skull and crossbones)
+   - GHS07 Health Hazard (Exclamation mark)
+   - GHS08 Serious Health Hazard (Human silhouette with star-shaped explosion in chest)
+   - GHS09 Hazardous to Environment (Dead tree & fish)
 4. For each identified pictogram, provide a confidence score (0-100)
-5. For each identified pictogram, provide normalized bounding box coordinates (x, y, width, height as decimals 0-1)
-6. List any pictograms that appear to be missing or unclear
-7. Provide an overall assessment of the label's compliance quality
+5. Provide an overall compliance assessment
 
-IMAGE TO ANALYZE:
-${imageBase64}
-
-Return your analysis as a JSON object with this exact structure:
+Return JSON:
 {
-  "productDescription": "This appears to be a [product type] with [notable visual characteristics]. The label shows [brand/text/imagery observations].",
+  "productDescription": "Description of the product",
   "detectedSeals": [
     {
       "sealId": "GHS01",
       "sealName": "Explosive",
       "confidence": 95,
-      "present": true,
-      "boundingBox": {
-        "x": 0.1,
-        "y": 0.2,
-        "width": 0.15,
-        "height": 0.15
-      }
+      "present": true
     }
   ],
   "overallConfidence": 85,
   "complianceStatus": "pass",
-  "summary": "Detailed analysis of what you found, including image quality, pictogram clarity, and any concerns"
+  "summary": "Detailed analysis"
 }
 
-Note: 
-- productDescription should be a clear, concise description of what the product appears to be based on visual observation
-- complianceStatus should be "pass" if all detected seals are clear and confidence is high (>80%), "warning" if confidence is moderate (60-80%) or image quality is poor, "fail" if critical issues are found
-- Only include seals that you actually detect in the image
-- Be thorough but conservative in your assessments
-- Bounding box coordinates should be normalized (0-1 range) where x and y are top-left corner positions, width and height are dimensions
-- Bounding boxes MUST tightly fit around the diamond shape of each pictogram`
-;
+Rules:
+- complianceStatus: "pass" (>80% confidence, all clear), "warning" (60-80% or poor quality), "fail" (critical issues)
+- Only include seals you actually detect
+- Be thorough but conservative
+- Do NOT include bounding box coordinates — localization is handled separately`;
 
   try {
+    // ── Stage 1: Call LLM for classification ────────────────────────────
     const response = await callAzureOpenAI(promptText, imageBase64);
     
     let analysis;
@@ -87,14 +95,71 @@ Note:
       throw new Error('Invalid response format from validation service.');
     }
 
+    // Fix case-sensitivity: LLM may return "GHS01" but REGULATORY_SEALS uses "ghs01"
     const detectedSealIds = new Set(
-      analysis.detectedSeals.map((seal: DetectedSeal) => seal.sealId)
+      analysis.detectedSeals.map((seal: DetectedSeal) => seal.sealId.toUpperCase())
     );
     
     const missingSeals = REGULATORY_SEALS
-      .filter((seal) => !detectedSealIds.has(seal.id))
+      .filter((seal) => !detectedSealIds.has(seal.code.toUpperCase()))
       .map((seal) => seal.name);
 
+    // Calculate overall confidence as the average of detected seal confidences
+    const overallConfidence = analysis.detectedSeals.length > 0
+      ? Math.round(
+          analysis.detectedSeals.reduce((sum: number, seal: DetectedSeal) => sum + seal.confidence, 0) /
+          analysis.detectedSeals.length
+        )
+      : 0;
+
+    // ── Stage 2: CV Template Matching for bounding boxes ────────────────
+    let requiresHumanReview = false;
+
+    try {
+      const sealIdsToLocate = analysis.detectedSeals
+        .filter((s: DetectedSeal) => s.present)
+        .map((s: DetectedSeal) => s.sealId);
+
+      if (sealIdsToLocate.length > 0) {
+        console.log('[CV] Requesting localization for:', sealIdsToLocate);
+        const cvResults = await locateSealsViaCV(imageBase64, sealIdsToLocate);
+        console.log('[CV] Results:', JSON.stringify(cvResults, null, 2));
+
+        // Merge CV bounding boxes into the detected seals
+        for (const cvResult of cvResults) {
+          const seal = analysis.detectedSeals.find(
+            (s: DetectedSeal) => s.sealId.toUpperCase() === cvResult.sealId.toUpperCase()
+          );
+          if (!seal) continue;
+
+          if (cvResult.localized && cvResult.boundingBox) {
+            seal.boundingBox = cvResult.boundingBox;
+            seal.localizationSource = 'cv';
+            seal.localizationFailed = false;
+            console.log(`[CV] ${seal.sealId}: localized via CV (score=${cvResult.matchScore})`);
+          } else {
+            // Use best-effort box if available (even below threshold), but flag for review
+            if (cvResult.boundingBox) {
+              seal.boundingBox = cvResult.boundingBox;
+              seal.localizationSource = 'cv';
+              console.log(`[CV] ${seal.sealId}: using best-effort box (score=${cvResult.matchScore}, below threshold)`);
+            }
+            seal.localizationFailed = true;
+            seal.localizationSource = undefined;
+            requiresHumanReview = true;
+          }
+        }
+      }
+    } catch (cvError) {
+      console.error('[CV] Localization FAILED — all seals marked for human review:', cvError);
+      // Mark all seals as needing human review
+      for (const seal of analysis.detectedSeals) {
+        seal.localizationFailed = true;
+      }
+      requiresHumanReview = true;
+    }
+
+    // ── Stage 3: Generate annotated image ───────────────────────────────
     let annotatedImageUrl: string | undefined;
     
     try {
@@ -103,9 +168,11 @@ Note:
         .map((seal: DetectedSeal) => ({
           sealName: seal.sealName,
           confidence: seal.confidence,
-          boundingBox: seal.boundingBox!
+          boundingBox: seal.boundingBox!,
+          localizationSource: seal.localizationSource,
         }));
       
+      console.log(`[Annotate] Drawing ${annotations.length} bounding box(es) on image`);
       if (annotations.length > 0) {
         annotatedImageUrl = await drawBoundingBoxes(imageBase64, annotations);
       }
@@ -121,10 +188,11 @@ Note:
       status: analysis.complianceStatus || 'warning',
       detectedSeals: analysis.detectedSeals || [],
       missingSeals,
-      overallConfidence: analysis.overallConfidence || 0,
+      overallConfidence,
       aiAnalysis: analysis.summary || 'No detailed analysis available.',
       productDescription: analysis.productDescription || 'Product description not available.',
-      annotatedImageUrl
+      annotatedImageUrl,
+      requiresHumanReview,
     };
 
     return result;

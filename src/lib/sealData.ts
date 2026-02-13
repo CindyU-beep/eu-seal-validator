@@ -19,6 +19,8 @@ export interface ValidationResult {
   aiAnalysis: string;
   productDescription: string;
   annotatedImageUrl?: string;
+  /** True when at least one detected seal could not be localized by CV — triggers mandatory human review. */
+  requiresHumanReview?: boolean;
 }
 
 export interface DetectedSeal {
@@ -32,6 +34,10 @@ export interface DetectedSeal {
     width: number;
     height: number;
   };
+  /** Where the bounding box came from: 'cv' (template matching), 'model' (LLM), or 'human' (manual annotation). */
+  localizationSource?: 'cv' | 'model' | 'human';
+  /** True when CV template matching failed to localize this seal. */
+  localizationFailed?: boolean;
 }
 
 export const REGULATORY_SEALS: RegulatorySeal[] = [
@@ -106,47 +112,5 @@ export const REGULATORY_SEALS: RegulatorySeal[] = [
     description: 'Hazardous to the aquatic environment',
     category: 'environmental',
     imageUrl: '/src/assets/seals-compressed/hazardous-to-environment.png'
-  },
-  {
-    id: 'eu-warn',
-    code: 'EU-WARN',
-    name: 'Warning',
-    description: 'General warning symbol for EU compliance',
-    category: 'physical'
-  },
-  {
-    id: 'eu-danger',
-    code: 'EU-DANGER',
-    name: 'Danger',
-    description: 'Danger signal word indicator',
-    category: 'physical'
-  },
-  {
-    id: 'eu-caution',
-    code: 'EU-CAUTION',
-    name: 'Caution',
-    description: 'Caution signal word indicator',
-    category: 'physical'
-  },
-  {
-    id: 'eu-ufh',
-    code: 'EU-UFH',
-    name: 'UFI Code Required',
-    description: 'Unique Formula Identifier requirement indicator',
-    category: 'physical'
-  },
-  {
-    id: 'eu-biocide',
-    code: 'EU-BPR',
-    name: 'Biocidal Product',
-    description: 'EU Biocidal Products Regulation compliance',
-    category: 'health'
-  },
-  {
-    id: 'eu-reach',
-    code: 'EU-REACH',
-    name: 'REACH Compliant',
-    description: 'Registration, Evaluation, Authorization of Chemicals compliance',
-    category: 'environmental'
   }
 ];

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useKV } from '@github/spark/hooks';
-import { Brain, Download, Trash, Eye, CheckCircle, Calendar, User } from '@phosphor-icons/react';
+import { Brain, Download, Trash, Eye, CheckCircle, Calendar, User, Crosshair } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,46 @@ import { REGULATORY_SEALS } from '@/lib/sealData';
 export function TrainingDataManagement() {
   const [trainingData, setTrainingData] = useKV<TrainingFeedback[]>('ml-training-feedback', []);
   const [selectedFeedback, setSelectedFeedback] = useState<TrainingFeedback | null>(null);
+  const detailCanvasRef = useRef<HTMLCanvasElement>(null);
+  const detailImageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (!selectedFeedback || !detailCanvasRef.current || !detailImageRef.current) return;
+    
+    const canvas = detailCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx || !selectedFeedback.humanAnnotations) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    selectedFeedback.humanAnnotations.forEach(annotation => {
+      const seal = REGULATORY_SEALS.find(s => s.id === annotation.sealId);
+      const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+      const colorIndex = REGULATORY_SEALS.findIndex(s => s.id === annotation.sealId) % colors.length;
+      const color = colors[colorIndex];
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(
+        annotation.boundingBox.x * canvas.width,
+        annotation.boundingBox.y * canvas.height,
+        annotation.boundingBox.width * canvas.width,
+        annotation.boundingBox.height * canvas.height
+      );
+
+      const label = seal?.code || 'Unknown';
+      ctx.fillStyle = color;
+      ctx.font = 'bold 14px Inter, sans-serif';
+      const textMetrics = ctx.measureText(label);
+      const padding = 6;
+      const x = annotation.boundingBox.x * canvas.width;
+      const y = annotation.boundingBox.y * canvas.height;
+      
+      ctx.fillRect(x, y - 24, textMetrics.width + padding * 2, 24);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(label, x + padding, y - 8);
+    });
+  }, [selectedFeedback]);
 
   const handleExportTrainingData = () => {
     if (!trainingData || trainingData.length === 0) {
@@ -40,6 +80,7 @@ export function TrainingDataManagement() {
           sealName: seal?.name || 'Unknown'
         };
       }),
+      humanAnnotations: feedback.humanAnnotations || [],
       reviewerNotes: feedback.reviewerNotes,
       reviewerConfidence: feedback.reviewerConfidence,
       imageData: feedback.originalResult.imageUrl
@@ -171,6 +212,12 @@ export function TrainingDataManagement() {
                       <CheckCircle size={14} weight="fill" />
                       {feedback.humanReviewedSeals.length} seals identified
                     </Badge>
+                    {feedback.humanAnnotations && feedback.humanAnnotations.length > 0 && (
+                      <Badge variant="outline" className="gap-1.5 border-primary/30 text-primary">
+                        <Crosshair size={14} weight="fill" />
+                        {feedback.humanAnnotations.length} annotated
+                      </Badge>
+                    )}
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Calendar size={14} weight="duotone" />
                       {new Date(feedback.timestamp).toLocaleString()}
@@ -241,14 +288,36 @@ export function TrainingDataManagement() {
                       <div className="space-y-6 py-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-4">
-                            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                              Original Image
-                            </h4>
-                            <img
-                              src={selectedFeedback.originalResult.imageUrl}
-                              alt="Training data"
-                              className="w-full h-auto rounded-lg border-2 border-border"
-                            />
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                                Original Image
+                              </h4>
+                              {selectedFeedback.humanAnnotations && selectedFeedback.humanAnnotations.length > 0 && (
+                                <Badge variant="outline" className="gap-1.5 border-primary/30 text-primary text-xs">
+                                  <Crosshair size={12} weight="fill" />
+                                  {selectedFeedback.humanAnnotations.length} annotations
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="relative rounded-lg border-2 border-border overflow-hidden">
+                              <img
+                                ref={detailImageRef}
+                                src={selectedFeedback.originalResult.imageUrl}
+                                alt="Training data"
+                                className="w-full h-auto"
+                                onLoad={(e) => {
+                                  if (detailCanvasRef.current) {
+                                    const img = e.target as HTMLImageElement;
+                                    detailCanvasRef.current.width = img.width;
+                                    detailCanvasRef.current.height = img.height;
+                                  }
+                                }}
+                              />
+                              <canvas
+                                ref={detailCanvasRef}
+                                className="absolute inset-0 w-full h-full pointer-events-none"
+                              />
+                            </div>
                           </div>
                           <div className="space-y-4">
                             <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
